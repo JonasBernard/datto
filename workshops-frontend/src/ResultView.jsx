@@ -1,0 +1,63 @@
+import Button from "./components/Button";
+import { exportExcel } from "./exportExcel";
+
+function interpretStatus(status) {
+    switch (status) {
+        case "no-perfect-solution": return "Es ist keine Zuteilung möglich. Die Gesamtkapazität der Workshops reicht nicht für alle Kinder aus. Es wurden so viele Kinder wie möglich zugeteilt."
+        case "error-unknown": return "Es ist ein unbekannter Fehler aufgetreten: Hier ist eine (Teil-)lösung:"
+        case "ok": return "Es wurde eine Lösung gefunden. Falls es mehrere gleichwertige Lösungen gab, wurde eine davon zufällig ausgewählt."
+        case "unknown-status": return "Es wurde keine Nachricht zur Lösung übermittelt."
+        default: return ""
+    }
+}
+
+export default function ResultView(props) {
+    const result = props.result;
+
+    if (!result) {
+        return (<></>);
+    }
+
+    const problemSolution = result.solution || [];
+    const status = result.status || "unknown-status";
+
+    const asssignedKids = problemSolution.map((e1, e2) => e1.Left.name);
+    const unassignedKids = result.kids.map(k => k.name).filter(kid => !(asssignedKids.includes(kid)));
+
+    return (
+        <div>
+            <span>{interpretStatus(status)}</span>
+            <div className="mt-3 flex flex-col items-center">
+                <div className="rounded-3xl bg-slate-100 dark:bg-gray-700 w-1/2 p-3 items-center justify-between mb-2">
+                    <div className="flex items-center justify-between">
+                        <span>Teilnehmer und Workshop nach Alphabet:</span>
+                        <span>
+                            <Button 
+                            onClick={() => exportExcel(result.solution)}
+                            bgColor="bg-green-800">Excel-Datei herunterladen</Button>
+                        </span>
+                    </div>
+                    <div className="mt-2">
+                    {problemSolution.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => (
+                        <div key={edge.Left.name}>
+                            <div className="rounded-xl bg-slate-300 dark:bg-gray-600 p-3 flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                    <p className="text-xl">{edge.Left.name}</p>
+                                </div>
+                                <span>
+                                    <p className="text-xl">{edge.Right.Workshop.name}</p>
+                                    <p>(Slot {edge.Right.Nr})</p>
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                    </div>
+                    <div className="mt-2">
+                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} <br />
+                        Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
