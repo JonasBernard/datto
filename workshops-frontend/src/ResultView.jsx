@@ -4,10 +4,10 @@ import { exportExcel } from "./exportExcel";
 
 function interpretStatus(status) {
     switch (status) {
-        case "no-perfect-solution": return "Es ist keine Zuteilung möglich. Die Gesamtkapazität der Workshops reicht nicht für alle Kinder aus. Es wurden so viele Kinder wie möglich zugeteilt."
-        case "error-unknown": return "Es ist ein unbekannter Fehler aufgetreten: Hier ist eine (Teil-)lösung:"
-        case "ok": return "Es wurde eine Lösung gefunden. Falls es mehrere gleichwertige Lösungen gab, wurde eine davon zufällig ausgewählt."
-        case "unknown-status": return "Es wurde keine Nachricht zur Lösung übermittelt."
+        case "no-perfect-solution": return "Es ist keine Einteilung möglich. Die Gesamtkapazität der Workshops reicht nicht für alle Kinder aus. Es wurden so viele Kinder wie möglich zugeteilt."
+        case "error-unknown": return "Es ist ein unbekannter Fehler aufgetreten. Es wurde eine Teillösung berechnet:"
+        case "ok": return "Es wurde eine Einteilung gefunden. Falls es mehrere gleichwertige Einteilungen gab, wurde eine davon zufällig ausgewählt."
+        case "unknown-status": return "Es wurde keine Nachricht zur Einteilung übermittelt."
         default: return ""
     }
 }
