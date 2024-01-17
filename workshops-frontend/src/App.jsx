@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import KidsList from "./kids/Kidslist";
 import Workshoplist from "./workshops/WorkshopList";
@@ -7,14 +7,45 @@ import Button from "./components/Button";
 import NavBar from "./Navbar";
 import Card from "./components/Card";
 
+function saveData(kids, workshops) {
+  localStorage.dataV1 = JSON.stringify({
+    kids: kids,
+    workshops: workshops
+  })
+}
+
+function loadData() {
+  if (localStorage.dataV1) {
+    let data = JSON.parse(localStorage.dataV1);
+    if (data.kids.length > 0 || data.workshops.length > 0)
+      return [true, data.kids, data.workshops]
+  }
+  return [false, [], []];
+}
+
 function App() {
   const [kids, setKids] = useState([]);
   const [workshops, setWorkshops] = useState([]);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
+
   const [result, setRequestResult] = useState(null);
 
   const [currentTab, setTab] = useState(0);
+
+  useEffect(() => {
+    let [loaded,k,w] = loadData();
+    if (loaded) {
+      setKids(k); setWorkshops(w);
+      setInfoMessage("Es wurden Daten aus deiner letzten Sitzung wiederhergestellt.");
+    }
+  }, []);
+
+  useEffect(() => {
+    saveData(kids, workshops);
+  }, [kids, workshops]);
 
   const sendData = () => {
     setErrorMessage("");
@@ -42,8 +73,9 @@ function App() {
       return;
     }
 
+    saveData(kidsOrig, workshopsOrig);
 
-    fetch("/api/weighted", {
+    fetch("http://localhost:5000/weighted", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -73,7 +105,21 @@ function App() {
     <div className="App dark:bg-slate-700 dark:text-stone-100 h-screen">
       <div className="dark:bg-slate-700 dark:text-stone-100 h-100">
         <NavBar></NavBar>
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center">
+
+          <div className="m-4 absolute">
+                {infoMessage && (
+                  <div className="rounded-full shadow-lg bg-indigo-400 text-black p-4">
+                    {infoMessage}
+                    <span
+                      onClick={() => setInfoMessage("")}
+                      className="m-4 text-black cursor-pointer"
+                    >
+                      OK
+                    </span>
+                  </div>
+                )}
+              </div>
 
           <Card extraStyle="container">
             <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-200 whitespace-nowrap dark:border-gray-700">

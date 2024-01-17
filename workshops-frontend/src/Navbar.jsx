@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Button from "./components/Button";
  
 const saveTheme = (theme) => {
     localStorage.theme = theme
@@ -47,13 +48,20 @@ export default function NavBar(props) {
         realizeTheme(theme);
     }, [theme]);
 
-    return <nav className="bg-white shadow dark:bg-gray-800 flex justify-between">
-        <div className="container flex items-center justify-between p-4 mb-2 mx-auto text-gray-600 capitalize dark:text-gray-300">
+    return <nav className="mb-2 bg-white shadow dark:bg-gray-800 flex justify-between">
+        <div className="container flex items-center justify-between p-4 mx-auto text-gray-600 capitalize dark:text-gray-300">
             <div>
                 <span><h2 className="text-lg font-bold">Gruppen-Tool</h2></span>
             </div>
 
-            <div>
+            <span className="text-xs">Made with ♥ by <a href="https://jonas-bernard.dev">Jonas Bernard</a></span>
+
+            <div className="flex gap-4">
+                <Button>
+                <a href="https://www.buymeacoffee.com/JonasBernard" target="_blank">
+                    <img src="/bmc-full-logo.svg" alt="Buy me a coffe" width={120} />
+                </a>
+                </Button>
                 <div className="relative inline-block">
                     <button onClick={() => setIsOpen((wasOpen) => !wasOpen)} className="flex items-center gap-1 relative z-10 p-2 text-gray-700 bg-white border border-transparent rounded-md dark:text-white focus:border-blue-500 focus:ring-opacity-40 dark:focus:ring-opacity-40 focus:ring-blue-300 dark:focus:ring-blue-400 focus:ring dark:bg-gray-800 focus:outline-none">
                         Theme: {printTheme(theme)}
