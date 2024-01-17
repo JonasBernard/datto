@@ -1,4 +1,5 @@
 import Button from "./components/Button";
+import Card from "./components/Card";
 import { exportExcel } from "./exportExcel";
 
 function interpretStatus(status) {
@@ -22,41 +23,39 @@ export default function ResultView(props) {
     const status = result.status || "unknown-status";
 
     const asssignedKids = problemSolution.map((e1, e2) => e1.Left.name);
-    const unassignedKids = result.kids.map(k => k.name).filter(kid => !(asssignedKids.includes(kid)));
+    const unassignedKids = result.kids.filter(kid => !(asssignedKids.includes(kid.name))).map(k => k.name);
 
     return (
         <div>
             <span>{interpretStatus(status)}</span>
-            <div className="mt-3 flex flex-col items-center">
-                <div className="rounded-3xl bg-slate-100 dark:bg-gray-700 w-1/2 p-3 items-center justify-between mb-2">
+            <div className="mt-3 flex flex-col items-stretch">
+                <Card className="rounded-xl bg-slate-100 dark:bg-gray-700 p-3 items-center justify-between mb-2">
                     <div className="flex items-center justify-between">
-                        <span>Teilnehmer und Workshop nach Alphabet:</span>
+                        <span>Teilnehmer nach Alphabet sortiert:</span>
                         <span>
                             <Button 
                             onClick={() => exportExcel(result.solution)}
-                            bgColor="bg-green-800">Excel-Datei herunterladen</Button>
+                            bgColor="bg-green-800">Als Excel-Datei herunterladen</Button>
                         </span>
                     </div>
                     <div className="mt-2">
                     {problemSolution.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => (
-                        <div key={edge.Left.name}>
-                            <div className="rounded-xl bg-slate-300 dark:bg-gray-600 p-3 flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                    <p className="text-xl">{edge.Left.name}</p>
-                                </div>
-                                <span>
-                                    <p className="text-xl">{edge.Right.Workshop.name}</p>
-                                    <p>(Slot {edge.Right.Nr})</p>
-                                </span>
+                        <div key={edge.Left.name} className="rounded-xl even:bg-gray-200 odd:bg-gray-100 odd:dark:bg-gray-600 even:dark:bg-gray-700 p-3 flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <p className="text-xl">{edge.Left.name}</p>
                             </div>
+                            <span>
+                                <p className="text-xl">{edge.Right.Workshop.name}</p>
+                                <p>(Slot {edge.Right.Nr})</p>
+                            </span>
                         </div>
                     ))}
                     </div>
                     <div className="mt-2">
-                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} <br />
-                        Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"}
+                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} ({asssignedKids.length}) <br />
+                        Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"} ({unassignedKids.length})
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

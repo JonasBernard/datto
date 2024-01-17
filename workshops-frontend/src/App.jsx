@@ -11,15 +11,37 @@ function App() {
   const [kids, setKids] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
   const [result, setRequestResult] = useState(null);
 
   const [currentTab, setTab] = useState(0);
 
   const sendData = () => {
     setErrorMessage("");
+    setWarningMessage("");
+    setRequestResult(null);
 
     const kidsOrig = kids;
     const workshopsOrig = workshops;
+
+    if (kidsOrig.map(k=>k.name).length > [...new Set(kidsOrig.map(k=>k.name))].length) {
+      setWarningMessage("Es gibt mehrere Teilnehmer mit dem gleichem Namen. Das kann zu Problemen führen.");
+    }
+
+    if (kidsOrig.filter(k => k.name == "").length > 0) {
+      setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.")
+    }
+    
+    if (workshopsOrig.filter(w => w.name == "").length > 0) {
+      setErrorMessage("Es gibt einen Workshop mit leerem Namen. Das muss behoben werden bevor eine Lösung gefunden werden kann.")
+      return;
+    }
+
+    if (workshopsOrig.filter(w => w.capacity == 0).length > 0) {
+      setErrorMessage("Es gibt einen Workshop mit Kapazität null. Dieser muss gelöscht werden bevor eine Lösung gefunden werden kann.")
+      return;
+    }
+
 
     fetch("/api/weighted", {
       method: "POST",
@@ -101,11 +123,24 @@ function App() {
               </div>
               <div className="m-4">
                 {errorMessage && (
-                  <div className="rounded-full bg-red-400 p-4">
+                  <div className="rounded-full bg-pink-400 text-black p-4">
                     {errorMessage}
                     <span
                       onClick={() => setErrorMessage("")}
-                      className="m-4 text-white cursor-pointer"
+                      className="m-4 text-black cursor-pointer"
+                    >
+                      x
+                    </span>
+                  </div>
+                )}
+              </div>
+               <div className="m-4">
+                {warningMessage && (
+                  <div className="rounded-full bg-yellow-400 text-black p-4">
+                    {warningMessage}
+                    <span
+                      onClick={() => setWarningMessage("")}
+                      className="m-4 text-black cursor-pointer"
                     >
                       x
                     </span>

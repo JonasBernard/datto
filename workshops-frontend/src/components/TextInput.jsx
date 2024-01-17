@@ -34,22 +34,26 @@ const TextInput = forwardRef((props, forwardedRef) => {
             onChange={props.onChange}
             placeholder={props.placeholder}
             onKeyDown={(e) => {
+                let triggeredAutocompletion = false;
                 if ((props.autocomplete && props.autocompleteSetValue) && (e.key === 'Tab' || e.key === 'Enter')) {
-                    (autocomplete !== "") && props.autocompleteSetValue(autocomplete);
+                    if (autocomplete !== "") {
+                        props.autocompleteSetValue(autocomplete);
+                        triggeredAutocompletion = true;
+                    }
                 }
 
-                props.onKeyDown && props.onKeyDown(e);
+                props.onKeyDown && props.onKeyDown(e, triggeredAutocompletion);
             }}
             className={
                 props.extraStyle
             + " block w-full px-4 py-2 text-gray-700 bg-white border border-gray-200 "
-            + "rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 "
-            + "focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"}
+            + "rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-indigo-400 "
+            + "focus:ring-indigo-300 focus:ring-opacity-40 dark:focus:border-indigo-300 focus:outline-none focus:ring"}
         />
         {ref.current && ref.current.id === document.activeElement.id 
             && autocomplete !== "" 
             && <span className="absolute top-2 right-2 text-gray-500">
-                <kbd className="inline mr-2 px-3 py-1 text-sm font-normal text-gray-600 bg-gray-300 rounded-full dark:text-gray-400 gap-x-2 dark:bg-gray-800">
+                <kbd className="invisible md:visible inline mr-2 px-3 py-1 text-sm font-normal text-gray-600 bg-gray-300 rounded-full dark:text-gray-400 gap-x-2 dark:bg-gray-900">
                     Tab
                 </kbd>
                 {autocomplete}

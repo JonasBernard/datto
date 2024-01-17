@@ -26,8 +26,8 @@ export default function KidsList(props) {
         }
 
         setKids([
-            ...kids,
-            {"id": uuidv4(), "name": newName, "wishes": wishes}
+            {"id": uuidv4(), "name": newName, "wishes": wishes},
+            ...kids
         ]);
         setNewWishList([...Array(wishCount).fill('')]);
         setNewName('');
@@ -87,7 +87,31 @@ export default function KidsList(props) {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                                    <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900 dark:bg-opacity-40">
+                                    
+                                    <tr>
+                                        <td className="p-1">
+                                            <TextInput extraStyle="rounded-none" placeholder="Name des Teilnehmers" ref={nameInputRef} value={newName} onChange={e => setNewName(e.target.value)}/>
+                                        </td>
+                                        {[...Array(wishCount)].map((x, i) => {
+                                            return <td className="p-1" key={i}>
+                                                <TextInput
+                                                    key={i}
+                                                    extraStyle="rounded-none" placeholder={i+1 + ". Wunsch"} 
+                                                    value={newWishList[i]} onChange={e => updateWish(i, e.target.value)}
+                                                    onKeyDown={(e, trAuoCom) => (i === wishCount-1 && (e.key === 'Enter') && !trAuoCom) && (e.preventDefault() || addKid())}
+                                                    autocomplete={workshopNames}
+                                                    autocompleteSetValue={value => updateWish(i, value)}
+                                                />
+                                            </td>
+                                        })}
+                                        <td className="p-2 text-sm whitespace-nowrap">
+                                            <Button onClick={() => addKid()}>
+                                                Hinzufügen
+                                            </Button>
+                                        </td>
+                                    </tr>
+
                                     {kids.map(k => (
                                         <tr key={k.id}>
                                             <td className="px-2 py-2 text-sm font-medium whitespace-nowrap">
@@ -103,7 +127,7 @@ export default function KidsList(props) {
 
                                             <td className="px-2 py-2 text-sm whitespace-nowrap">
                                                 <Button
-                                                    bgColor="bg-red-500 p-2"
+                                                    bgColor="bg-red-500 dark:bg-pink-400 dark:text-black p-2"
                                                     onClick={() => removeKid(k.id)}>
                                                     Löschen
                                                 </Button>
@@ -111,28 +135,18 @@ export default function KidsList(props) {
                                         </tr>
                                     ))}
 
-                                    <tr>
-                                        <td className="p-0">
-                                            <TextInput extraStyle="rounded-none" placeholder="Name des Teilnehmers" ref={nameInputRef} value={newName} onChange={e => setNewName(e.target.value)}/>
+                                    {kids.length > 0 && <tr className="text-gray-500 dark:text-gray-400 text-sm">
+                                        <td className="p-1">
+                                            <span>Anzahl Teilnehmer: {kids.length}</span>
                                         </td>
                                         {[...Array(wishCount)].map((x, i) => {
-                                            return <td className="p-0" key={i}>
-                                                <TextInput
-                                                    key={i}
-                                                    extraStyle="rounded-none" placeholder={i+1 + ". Wunsch"} 
-                                                    value={newWishList[i]} onChange={e => updateWish(i, e.target.value)}
-                                                    onKeyDown={(e) => (i === wishCount-1 && (e.key === 'Enter')) && (e.preventDefault() || addKid())}
-                                                    autocomplete={workshopNames}
-                                                    autocompleteSetValue={value => updateWish(i, value)}
-                                                />
-                                            </td>
-                                        })}
-                                        <td className="px-2 py-0 text-sm whitespace-nowrap">
-                                            <Button bgColor="bg-blue-800 p-2" onClick={() => addKid()}>
-                                                Hinzufügen
-                                            </Button>
+                                        return <td className="p-1" key={i}>
+                                            <span>Anzahl gesetzer Wünsche in dieser Spalte: {kids.reduce((a,b) => b.wishes[i] != "" ? a + 1 : a, 0)}</span>
                                         </td>
-                                    </tr>
+                                        })}
+                                        <td></td>
+                                    </tr>}
+
                                     </tbody>
                                 </table>
 
