@@ -99,7 +99,7 @@ export default function WelcomePage(props) {
             </h1>
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
-              Eins sei zum Anfang gesagt: Es wird zu jedem Zeitpunkt
+              Es sei zum Anfang gesagt: Es wird zu jedem Zeitpunkt
               sichergestellt, dass keiner der Workshops seine Kapazität
               überschreitet.
               <br />
@@ -107,7 +107,7 @@ export default function WelcomePage(props) {
               Unter dieser Bedigung werden in zufälliger Reihnfolge Teilnehmer
               ihren Wünschen zugeordnet. Dabei werden Erst-Wünsche natürlich
               gegenüber Zweit-Wünschen und diese gegenüber Dritt-Wünschen
-              priorisiert.
+              priorisiert, sofern die entsprechende Einstellung aktiv ist.
               <br />
               <br />
               Dabei kann es passieren, dass bereits zutegeilte Teilnehmer,
@@ -132,7 +132,7 @@ export default function WelcomePage(props) {
               <br />
               <br />
               <span className="font-bold">1. Kapazität reicht nicht aus. </span>
-              Wenn die Summer der Teilnehmer größer ist als die Summe der
+              Wenn die Anzahl der Teilnehmer größer ist als die Summe der
               Kapazitäten der Workshops, wird es unweigerlich zum Fall kommen,
               dass Teilnehmer nicht zugeteilt werden können. In diesem Fall wird
               das Tool darauf mit einer Warnung hinweisen und eine Einteilung
@@ -147,6 +147,8 @@ export default function WelcomePage(props) {
               In diesem Fall kann es passieren, dass der Teilnehmer in einen
               Workshop eingeteilt wird, den er sich nicht wünscht. Das Tool
               versucht jedoch sehr stark, das zu vermeiden.
+              Dieses verhalten kann abgeschaltet werden, indem die Option
+              "Einteilung in nicht gewünschte Workshops zulassen" deaktiviert wird.
             </p>
           </div>
         </div>

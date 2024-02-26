@@ -7,11 +7,16 @@ import Button from "./components/Button";
 import NavBar from "./Navbar";
 import Card from "./components/Card";
 import WelcomePage from "./Welcomepage";
+import SettingsTab from "./SettingsTab";
 
-function saveData(kids, workshops) {
+const PROTO = "http://";
+const HOST = "localhost:5000";
+
+function saveData(kids, workshops, settings) {
   localStorage.dataV1 = JSON.stringify({
     kids: kids,
-    workshops: workshops
+    workshops: workshops,
+    settings: settings,
   })
 }
 
@@ -19,7 +24,7 @@ function loadData() {
   if (localStorage.dataV1) {
     let data = JSON.parse(localStorage.dataV1);
     if (data.kids.length > 0 || data.workshops.length > 0)
-      return [true, data.kids, data.workshops]
+      return [true, data.kids, data.workshops, data.settings]
   }
   return [false, [], []];
 }
@@ -32,21 +37,26 @@ function App() {
   const [warningMessage, setWarningMessage] = useState("");
   const [infoMessage, setInfoMessage] = useState("");
 
+  const [settings, setSettings] = useState({});
   const [result, setRequestResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [currentTab, setTab] = useState(3);
 
   useEffect(() => {
-    let [loaded,k,w] = loadData();
+    let [loaded,k,w,s] = loadData();
     if (loaded) {
-      setKids(k); setWorkshops(w); setTab(0);
+      
+      setKids(k); setWorkshops(w); setTab(2);
+      s && setSettings(s);
+
       setInfoMessage("Es wurden Daten aus deiner letzten Sitzung wiederhergestellt.");
     }
   }, []);
 
   useEffect(() => {
-    saveData(kids, workshops);
-  }, [kids, workshops]);
+    saveData(kids, workshops, settings);
+  }, [kids, workshops, settings]);
 
   const sendData = () => {
     setErrorMessage("");
@@ -60,36 +70,42 @@ function App() {
       setWarningMessage("Es gibt mehrere Teilnehmer mit dem gleichem Namen. Das kann zu Problemen führen.");
     }
 
-    if (kidsOrig.filter(k => k.name == "").length > 0) {
+    if (kidsOrig.filter(k => k.name === "").length > 0) {
       setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.")
     }
     
-    if (workshopsOrig.filter(w => w.name == "").length > 0) {
+    if (workshopsOrig.filter(w => w.name === "").length > 0) {
       setErrorMessage("Es gibt einen Workshop mit leerem Namen. Das muss behoben werden bevor eine Einteilung gefunden werden kann.")
       return;
     }
 
-    if (workshopsOrig.filter(w => w.capacity == 0).length > 0) {
+    if (workshopsOrig.filter(w => w.capacity === 0).length > 0) {
       setErrorMessage("Es gibt einen Workshop mit Kapazität null. Dieser muss gelöscht werden bevor eine Einteilung gefunden werden kann.")
       return;
     }
 
     saveData(kidsOrig, workshopsOrig);
 
-    fetch("/api/weighted", {
+    const path = settings.useWeighted ? "/weighted" : "/unweighted";
+
+    setIsLoading(true);
+    fetch(PROTO + HOST + path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         kids: kidsOrig,
         workshops: workshopsOrig,
+        settings: settings,
       }),
     })
       .then((response) => response.json())
       .catch((err) => {
+        setIsLoading(false);
         console.error(err);
         setErrorMessage("Failed to parse JSON: " + err.message);
       })
       .then((actualData) => {
+        setIsLoading(false);
         const result = {
           ...actualData,
           kids: kidsOrig,
@@ -176,9 +192,12 @@ function App() {
               <KidsList kids={kids} setKids={setKids} workshopNames={workshops.map(w => w.name)} />
             </div>}
 
-            {currentTab === 2 && <div className="pt-3">
-              <div>
-                <Button onClick={sendData}>Gruppen jetzt einteilen</Button>
+            {currentTab === 2 && <div className="pt-3 flex flex-col">
+              <SettingsTab initialSettings={settings} setSettings={setSettings}></SettingsTab>
+              <div className="mt-12">
+                <Button disabled={isLoading} onClick={sendData}>
+                  {!isLoading ? "Gruppen jetzt einteilen" : "Gruppen werden eingeteilt..."}
+                </Button>
               </div>
               <div className="m-4">
                 {errorMessage && (

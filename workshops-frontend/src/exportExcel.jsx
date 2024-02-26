@@ -1,11 +1,14 @@
 import * as XLSX from 'xlsx/xlsx.mjs';
 
-export const exportExcel = (result) => {
+export const exportExcel = (result, unassignedKids) => {
     const dataSorted = result.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => {
-        return {name: edge.Left.name, workshop: edge.Right.Workshop.name}
+        return {name: edge.Left.name, workshop: edge.Right.name}
     });
 
-    const dataAsCSV = formatCSV(dataSorted);
+    let dataAsCSV = formatCSV(dataSorted);
+
+    if (unassignedKids.length > 0)
+        dataAsCSV += "\n" + ["Nicht eingeteilt", unassignedKids.join(", ")].join(SEP) + "\n";
 
     let workbook = XLSX.read(dataAsCSV, { type: "binary" });
     XLSX.writeFile(workbook, "Workshopeinteilung.xlsx", { compression: false });

@@ -35,7 +35,7 @@ const TextInput = forwardRef((props, forwardedRef) => {
             placeholder={props.placeholder}
             onKeyDown={(e) => {
                 let triggeredAutocompletion = false;
-                if ((props.autocomplete && props.autocompleteSetValue) && (e.key === 'Tab' || e.key === 'Enter')) {
+                if ((props.autocomplete && props.autocompleteSetValue) && ((e.key === 'Tab' && !e.shiftKey) || e.key === 'Enter')) {
                     if (autocomplete !== "") {
                         props.autocompleteSetValue(autocomplete);
                         triggeredAutocompletion = true;

@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
-import Card from "../components/Card";
 
 export default function KidsList(props) {
     const kids = props.kids;
@@ -46,7 +45,7 @@ export default function KidsList(props) {
 
     return (
             <section className="container px-4 mx-auto">
-                {/* <h2 className="text-lg font-medium text-gray-800 dark:text-white">Kinder</h2> */}
+                {/* <h2 className="text-lg font-medium text-gray-800 dark:text-white">Teilnehmer</h2> */}
 
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
                     Füge die Teilnehmer und ihre Wünsche hinzu.
@@ -141,7 +140,7 @@ export default function KidsList(props) {
                                         </td>
                                         {[...Array(wishCount)].map((x, i) => {
                                         return <td className="p-1" key={i}>
-                                            <span>Anzahl gesetzer Wünsche in dieser Spalte: {kids.reduce((a,b) => b.wishes[i] != "" ? a + 1 : a, 0)}</span>
+                                            <span>Anzahl gesetzer Wünsche in dieser Spalte: {kids.reduce((a,b) => b.wishes[i] !== "" ? a + 1 : a, 0)}</span>
                                         </td>
                                         })}
                                         <td></td>

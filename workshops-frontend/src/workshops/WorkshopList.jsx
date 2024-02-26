@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 import NumberInput from "../components/NumberInput";
-import Card from "../components/Card";
 
 export default function Workshoplist(props) {
     const workshops = props.workshops;
@@ -66,9 +65,9 @@ export default function Workshoplist(props) {
                                         </td>
                                         <td className="p-1">
                                             <NumberInput extraStyle="rounded-none" 
-                                                placeholder="Wie viele Kinder kann der Workshop aufnehmen?" 
+                                                placeholder="Wie viele Teilnehmer kann der Workshop aufnehmen?" 
                                                 value={newCapa} onChange={e => setNewCapa(e.target.value)}
-                                                onKeyDown={(e) => (e.key === 'Tab' || e.key === 'Enter') && (e.preventDefault() || addWorkshop())} 
+                                                onKeyDown={(e) => ((e.key === 'Tab' && !e.shiftKey) || e.key === 'Enter' ) && (e.preventDefault() || addWorkshop())} 
                                             />
                                         </td>
                                         <td className="p-2 text-sm whitespace-nowrap">

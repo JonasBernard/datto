@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/JonasBernard/min-cost-max-flow/matching"
-	"github.com/JonasBernard/min-cost-max-flow/util"
 )
 
 type MatchNode[L any, R any] struct {
@@ -27,19 +26,15 @@ func (n MatchNode[L, R]) String() string {
 type Child struct {
 	Name   string    `json:"name"`
 	Wishes [3]string `json:"wishes"`
+	Id     string    `json:"id"`
 }
 
 func (c Child) String() string {
 	return c.Name
 }
 
-type WorkshopSlot struct {
-	Workshop Workshop
-	Nr       int
-}
-
-func (w WorkshopSlot) String() string {
-	return fmt.Sprintf("%v (slot %v)", w.Workshop.Name, w.Nr)
+func (w Workshop) String() string {
+	return fmt.Sprintf("%v (cap %v)", w.Name, w.Capacity)
 }
 
 type Workshop struct {
@@ -50,15 +45,20 @@ type Workshop struct {
 type SentWishes struct {
 	Kids      []Child
 	Workshops []Workshop
+	Settings  Settings `json:"settings,omitempty"`
+}
+
+type Settings struct {
+	AllowAssignmentToNonWishedWorkshop bool `json:"allowAssignmentToNonWishedWorkshop"`
 }
 
 type ResponseSolution struct {
-	Solution []matching.MatchingEdge[Child, WorkshopSlot] `json:"solution"`
-	Status   string                                       `json:"status"`
+	Solution []matching.MatchingEdge[Child, Workshop] `json:"solution"`
+	Status   string                                   `json:"status"`
 }
 
-func AllowOriginLocalhsot(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000, https://gruppen-tool.jonasbernard.de")
+func AllowOriginLocalhost(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 func AddDefaultHeader(w *http.ResponseWriter) {
@@ -70,16 +70,28 @@ func AddDefaultHeader(w *http.ResponseWriter) {
 	headers.Add("Access-Control-Allow-Methods", "POST, OPTIONS")
 }
 
-func GetEdgeWeight(wishIndex int) float64 {
-	return float64(wishIndex * wishIndex)
-}
-
 func NormalizeString(s string) string {
 	return strings.TrimSpace(strings.ToLower(s))
 }
 
-func Weighted(w http.ResponseWriter, req *http.Request) {
-	AllowOriginLocalhsot(&w)
+func Weighted() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		SolveGroupProblem(w, r, func(i int) float64 {
+			return float64(i * i)
+		})
+	}
+}
+
+func Unweighted() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		SolveGroupProblem(w, r, func(i int) float64 {
+			return 1
+		})
+	}
+}
+
+func SolveGroupProblem(w http.ResponseWriter, req *http.Request, getEdgeWeight func(int) float64) {
+	AllowOriginLocalhost(&w)
 	AddDefaultHeader(&w)
 
 	var wished SentWishes
@@ -112,33 +124,26 @@ func Weighted(w http.ResponseWriter, req *http.Request) {
 
 	workshops := wished.Workshops
 
-	workshopSlots := util.FlatMapSlice(workshops, func(w *Workshop) []WorkshopSlot {
-		slots := make([]WorkshopSlot, 0, w.Capacity)
-		for i := 0; i < w.Capacity; i++ {
-			slot := WorkshopSlot{
-				Workshop: *w,
-				Nr:       i + 1,
-			}
-			slots = append(slots, slot)
-		}
-		return slots
-	})
+	allowAssignmentToNonWishedWorkshop := wished.Settings.AllowAssignmentToNonWishedWorkshop
 
-	matchingProblem := matching.MatchingProblem[Child, WorkshopSlot]{
+	matchingProblem := matching.MatchingProblem[Child, Workshop]{
 		Lefts:  children,
-		Rights: workshopSlots,
+		Rights: workshops,
 	}
 
-	solutions, err := matchingProblem.SolveMany(1, func(c Child, w WorkshopSlot) (connect bool, weight float64) {
+	solutions, err := matchingProblem.SolveMany(1, func(c Child, w Workshop) (connect bool, weight float64) {
 		for j := 0; j < 3; j++ {
 			wi := c.Wishes[j]
 
-			if NormalizeString(wi) == NormalizeString(w.Workshop.Name) {
-				return true, GetEdgeWeight(j)
+			if NormalizeString(wi) == NormalizeString(w.Name) {
+				return true, getEdgeWeight(j)
 			}
 		}
 
-		return true, 10.0
+		// if false, 10 will be ignored
+		return allowAssignmentToNonWishedWorkshop, 16.0
+	}, func(w Workshop) (capacity float64) {
+		return float64(w.Capacity)
 	})
 
 	if solutions == nil || len(solutions) < 1 {
@@ -168,9 +173,10 @@ func Weighted(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	fmt.Println("Go server: Workshops-Backend started.")
+	fmt.Println("Go server: Workshops-Backend started. Listening on :5000")
 
-	http.HandleFunc("/weighted", Weighted)
+	http.HandleFunc("/weighted", Weighted())
+	http.HandleFunc("/unweighted", Unweighted())
 
 	http.ListenAndServe(":5000", nil)
 }
