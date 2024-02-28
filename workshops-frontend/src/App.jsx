@@ -9,8 +9,7 @@ import Card from "./components/Card";
 import WelcomePage from "./Welcomepage";
 import SettingsTab from "./SettingsTab";
 
-const PROTO = "http://";
-const HOST = "localhost:5000";
+const APIBASE = process.env.REACT_APP_API_BASEURL || "http://localhost:5000";
 
 function saveData(kids, workshops, settings) {
   localStorage.dataV1 = JSON.stringify({
@@ -89,7 +88,7 @@ function App() {
     const path = settings.useWeighted ? "/weighted" : "/unweighted";
 
     setIsLoading(true);
-    fetch(PROTO + HOST + path, {
+    fetch(APIBASE + path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

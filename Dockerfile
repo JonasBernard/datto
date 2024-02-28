@@ -20,6 +20,8 @@ COPY workshops-frontend/src/ ./src
 COPY workshops-frontend/package.json ./
 COPY workshops-frontend/tailwind.config.js ./
 
+ENV REACT_APP_API_BASEURL="/api"
+
 RUN npm install
 RUN npm run build
 
