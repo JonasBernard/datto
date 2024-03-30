@@ -70,7 +70,13 @@ function App() {
     }
 
     if (kidsOrig.filter(k => k.name === "").length > 0) {
-      setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.")
+      setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.");
+    }
+
+    if (kidsOrig.filter(k => {
+      return k.wishes.filter(w => w !== "").length > [...new Set(k.wishes.filter(w => w !== ""))].length;
+    }).length > 0) {
+      setWarningMessage("Es gibt Teilnehmer die sich den gleichen Workshop mehrfach wünschen.");
     }
     
     if (workshopsOrig.filter(w => w.name === "").length > 0) {
