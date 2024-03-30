@@ -1,6 +1,19 @@
 import * as XLSX from 'xlsx/xlsx.mjs';
 
 export const exportExcel = (result, unassignedKids) => {
+    let workbook = worksheetAllKids(result, unassignedKids);
+    
+    let workshops = [... new Set(result.map(edge => edge.Right.name))].sort();
+    for (let workshop of workshops) {
+        let data = result.filter(edge => edge.Right.name === workshop).map(edge => { return {Name: edge.Left.name}});
+        let worksheet = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(workbook, worksheet, workshop, true);
+    }
+
+    XLSX.writeFile(workbook, "Workshopeinteilung.xlsx", { compression: false });
+}
+
+const worksheetAllKids = (result, unassignedKids) => {
     const dataSorted = result.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => {
         return {name: edge.Left.name, workshop: edge.Right.name}
     });
@@ -11,7 +24,7 @@ export const exportExcel = (result, unassignedKids) => {
         dataAsCSV += "\n" + ["Nicht eingeteilt", unassignedKids.join(", ")].join(SEP) + "\n";
 
     let workbook = XLSX.read(dataAsCSV, { type: "binary" });
-    XLSX.writeFile(workbook, "Workshopeinteilung.xlsx", { compression: false });
+    return workbook;
 }
 
 const SEP = ",";
