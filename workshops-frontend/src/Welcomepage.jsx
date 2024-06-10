@@ -36,8 +36,8 @@ export default function WelcomePage(props) {
               <a className="cursor-pointer" onClick={() => setTab(1)}>
                 Teilnehmer
               </a>{" "}
-              einige Namen von Personen angeben, die in die Workshops eingeteilt
-              werden sollen. Jeder kann (muss aber nicht) bis zu drei Wünsche
+              Namen von Personen angeben, die in die Workshops eingeteilt
+              werden sollen. Jeder kann bis zu drei Wünsche
               abgeben.
             </p>
           </div>
@@ -53,9 +53,9 @@ export default function WelcomePage(props) {
                 Einteilen
               </a>{" "}
               kannst du deine Daten an den Server übermitteln und eine
-              Einteilung anfordern. Es wird mittelhilfe eines mathmatischen
-              Algorithmus eine Einteilung berechnet, die die maximalen
-              Kapzitäten der Workshops berückslichtigt und dabei möglichst allen
+              Einteilung anfordern. Das Tool berechnet mit Hilfe eines mathmatischen
+              Algorithmus eine Einteilung, die die maximalen
+              Kapzitäten der Workshops berückslichtigt und dabei möglichst vielen
               Teilnehmern ihre Wünsche erfüllt.
             </p>
           </div>
@@ -84,22 +84,22 @@ export default function WelcomePage(props) {
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
               Deine angegebenen Daten (Workshops und Teilnehmer) werden in
-              deinem Browser gespeichert und wieder geladen, wenn du diese Seite
+              deinem Browser gespeichert und erneut in die Tabellen gefüllt, wenn du diese Seite
               zu einem späteren Zeitpunkt wieder aufrufst. Außerdem werden die
-              Workshops und Teilnehmer an den Server geschickt, dort zur
-              Verarbeitung kurzzeitig gespeichert und dann gelöscht. Deine
-              Einteilgung wird nicht von selbst gespeichert. Du kannst aber eine
-              Excel-Datei mit allen Namen abspeichern.
+              Workshops und Teilnehmer, sobald du auf "Gruppen jetzt einteilen" klickst, an einen Server geschickt, dort zur
+              Verarbeitung kurzzeitig gespeichert und dann gelöscht. Deine dabei entstandene
+              Einteilgung wird nicht gespeichert. Du kannst aber eine
+              Excel-Datei mit allen Namen und ihren Workshop herunterladen und abspeichern.
             </p>
           </div>
 
           <div className="p-8 bg-gray-100 rounded-lg dark:bg-gray-900 dark:bg-opacity-40">
             <h1 className="font-semibold text-gray-700 dark:text-white">
-              Wie funktioniert die Zuteilung genau?
+              Wie funktioniert die Einteilung genau?
             </h1>
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
-              Es sei zum Anfang gesagt: Es wird zu jedem Zeitpunkt
+              Es wird zu jedem Zeitpunkt
               sichergestellt, dass keiner der Workshops seine Kapazität
               überschreitet.
               <br />
@@ -144,11 +144,64 @@ export default function WelcomePage(props) {
               <span className="font-bold">
                 2. Der Teilnehmer kann keinen seiner drei Wünsche erhalten.{" "}
               </span>
-              In diesem Fall kann es passieren, dass der Teilnehmer in einen
-              Workshop eingeteilt wird, den er sich nicht wünscht. Das Tool
-              versucht jedoch sehr stark, das zu vermeiden.
-              Dieses verhalten kann abgeschaltet werden, indem die Option
-              "Einteilung in nicht gewünschte Workshops zulassen" deaktiviert wird.
+              Es kann passieren, dass es einen Teilnehmer gibt, der keinen seiner Wünsche erfüllt
+              bekommen kann. 
+              Je nach Einstellung der Option "Einteilung in nicht gewünschte Workshops zulassen"
+              wird ein solcher Teilnehmer einem noch freien Workshop zugeteilt, oder überheupt nicht
+              zugeteilt.
+            </p>
+          </div>
+
+          <div className="p-8 bg-gray-100 rounded-lg dark:bg-gray-900 dark:bg-opacity-40">
+            <h1 className="font-semibold text-gray-700 dark:text-white">
+              Wie funktioniert die Einteilung mathematisch nun wirklich ganz ganz genau?
+            </h1>
+
+            <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
+              <span className="font-bold">Modellierung.</span>
+              Das Problem wird mathematisch als (nicht-gerichteter, einfacher)
+              kanten-gewichteter Graph modelliert.
+              Für jeden Teilnehmer und jeden Workshop gibt es jeweils einen Knoten
+              in diesem Graphen. Jeder Teilnehmer wird genau mit den Workshops durch
+              eine Kante verbunden, die er sich wünscht, und mit der entstandenen
+              Kante wird ein Kostenwert (ein Gewicht) assoziiert.
+              Dieser Kostenwert hängt davon ab, mit welcher Priorität sich der Teilnehmer den Workshop gewünscht hat.
+              Wenn die Wünsche als ungewichtet betrachtet werden, ist der Wert in jedem Fall eins.
+              Bei gewichteten Wünschen kostet ein 1.-Wunsch eine, ein 2.-Wunsch vier und ein 3.-Wunsch
+              neun Kosteneinheiten.
+              Falls die Option "Einteilung in nicht gewünschte Workshops zulassen" gesetzt ist,
+              werden alle noch nicht verbundenen Teilnehmer-Workshop-Paare durch eine Kante mit Kosten
+              16 verbunden.
+              <br />
+              <br />
+              <span className="font-bold">Problemstellung.</span>
+              Als Einteilung (Matching) versteht man (in diesem Kontext) eine Auswahl einiger Kanten aus dem Graphen,
+              die so erfolgt, dass jeder Teilnehmer mit genau einem Workshop verbunden ist,
+              und jeder Workshop mit maximal so vielen Teilnehmern verbunden ist, wie
+              seine Kapazität es erlaubt.
+              Da die Wünsche der Teilnehmer (mitunter) als gewichtet betrachtet werden,
+              ist es nicht nur das Ziel, ein irgendein Matching finden, sondern unter allen Matchings
+              die es gibt, eines zu finden, welches minimale Gesamtkosten realisiert.
+              Die Gesamtkosten ergibt sich dabei aus der Summe aller Kosten der am Matching beteiligten Kanten.
+              <br />
+              <br />
+              <span className="font-bold">Lösungsansatz.</span>
+              Um ein günstiges (auch minimales) Matching zu finden, wird das
+              Problem in ein Maximaler Flusswert-Problem (Maximum network flow problem) umformuliert.
+              Alle Kanten im Graphen erhalten einen weiteren Wert: eine Kapazität.
+              Die Kapazität einer Kante entspricht der gesetzten Kapazität des Workshops, der an einem Ende der Kante liegt.
+              Es werden außerdem 2 Knoten in den Graphen hinzugefügt: Ein Quelle (Source), die 
+              mit allen Teilnehmer-Knoten verbunden wird,
+              und eine Senke (Sink), die mit allen Workshop-Knoten verbunden wird.
+              Alle so entstandenen Kanten bekommen beliebige, aber uniforme Kosten- und Kapazitätenwerte,
+              in dieser Implementierung "eins".
+              
+              Nun ist das gesetzt Ziel wie folgt formuliert:
+              Wenn wir uns vorstellen, aus der Quelle entspringt Wasser, welches entlang der Kanten
+              zur Senke fließt, wie viel Wasser kommt pro Zeiteinheit an der Senke an, wenn pro Zeiteinheit
+              nur so viel Wasser entlang der Kanten fließen kann, wie es die Kapazitäten angeben?
+              <span className="font-bold">Min-Cost-Max-Flow</span>
+              
             </p>
           </div>
         </div>
