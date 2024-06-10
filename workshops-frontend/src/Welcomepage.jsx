@@ -158,7 +158,7 @@ export default function WelcomePage(props) {
             </h1>
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
-              <span className="font-bold">Modellierung.</span>
+              <span className="font-bold">Modellierung. </span>
               Das Problem wird mathematisch als (nicht-gerichteter, einfacher)
               kanten-gewichteter Graph modelliert.
               Für jeden Teilnehmer und jeden Workshop gibt es jeweils einen Knoten
@@ -174,18 +174,18 @@ export default function WelcomePage(props) {
               16 verbunden.
               <br />
               <br />
-              <span className="font-bold">Problemstellung.</span>
+              <span className="font-bold">Problemstellung. </span>
               Als Einteilung (Matching) versteht man (in diesem Kontext) eine Auswahl einiger Kanten aus dem Graphen,
               die so erfolgt, dass jeder Teilnehmer mit genau einem Workshop verbunden ist,
               und jeder Workshop mit maximal so vielen Teilnehmern verbunden ist, wie
               seine Kapazität es erlaubt.
               Da die Wünsche der Teilnehmer (mitunter) als gewichtet betrachtet werden,
-              ist es nicht nur das Ziel, ein irgendein Matching finden, sondern unter allen Matchings
+              ist es nicht nur das Ziel, ein irgendein Matching zu finden, sondern unter allen Matchings
               die es gibt, eines zu finden, welches minimale Gesamtkosten realisiert.
               Die Gesamtkosten ergibt sich dabei aus der Summe aller Kosten der am Matching beteiligten Kanten.
               <br />
               <br />
-              <span className="font-bold">Lösungsansatz.</span>
+              <span className="font-bold">Lösungsansatz. </span>
               Um ein günstiges (auch minimales) Matching zu finden, wird das
               Problem in ein Maximaler Flusswert-Problem (Maximum network flow problem) umformuliert.
               Alle Kanten im Graphen erhalten einen weiteren Wert: eine Kapazität.
@@ -200,8 +200,27 @@ export default function WelcomePage(props) {
               Wenn wir uns vorstellen, aus der Quelle entspringt Wasser, welches entlang der Kanten
               zur Senke fließt, wie viel Wasser kommt pro Zeiteinheit an der Senke an, wenn pro Zeiteinheit
               nur so viel Wasser entlang der Kanten fließen kann, wie es die Kapazitäten angeben?
-              <span className="font-bold">Min-Cost-Max-Flow</span>
-              
+            
+              Die Angaben, wie viel Wasser wo fließt, wird als Funktion in den Kanten
+              dargestellt und als Fluss (Flow) bezeichnet.
+              Da die Wünsche der Teilnehmer weiterhin als gewichtet betrachtet werden,
+              ist es nicht nur das Ziel, ein irgendeinen Flow zu finden, sondern unter allen Flows
+              die es gibt, eines zu finden, welches minimale Gesamtkosten realisiert. Ein Flow kann kann
+              in ein Matching überführt werden.
+              <br/>
+              <br/>
+              <span className="font-bold">Min-Cost-Max-Flow. </span>
+              Für das genennate Problem gibt es Algorithmen. Eine Methode zum Lösen des Problems
+              ist ein sogenannter "Successive Shortest Path"-Algorithmus. Hier wird ein anfänglicher
+              Null-Fluss schrittweise entland eines (bezüglich der Kosten) kürzesten (günstigsten)
+              Pfades in Richtung eines maxiamlen Flusses erhöht.
+              Zum finden der kürzesten Pfade wird in diesem Tool
+              eine Implementierung des Bellman-Ford-Moore-Algorithmus verwendet.
+
+              Der Quellcode für die algorithmischen Teile des Tools befinden sich
+              hier: https://github.com/JonasBernard/min-cost-max-flow.
+
+              Der Quellcode für die Webseite befindet sich hier: https://github.com/JonasBernard/datto.
             </p>
           </div>
         </div>
