@@ -7,5 +7,5 @@ which is located at https://github.com/JonasBernard/min-cost-max-flow.
 
 To start, execute
 ```
-go run main.go
+go run src/main.go
 ```

@@ -7,6 +7,11 @@ To start the application locally, depending on your environment you may have to 
 nvm use latest
 ```.
 
+To install the dependencies, use
+```
+npm i
+```
+
 Then, use
 ```npm start```
 to start the development server.
