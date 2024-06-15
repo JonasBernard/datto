@@ -13,7 +13,7 @@ export default function SettingsTab(props) {
             useWeighted: useWeighted,
             allowAssignmentToNonWishedWorkshop: allowAssignmentToNonWishedWorkshop
         })
-    }, [useWeighted, allowAssignmentToNonWishedWorkshop]);
+    }, [useWeighted, allowAssignmentToNonWishedWorkshop, setSettings]);
 
     return (
     <div className="flex flex-col items-center p-8">

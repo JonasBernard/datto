@@ -58,7 +58,7 @@ export default function NavBar(props) {
 
             <div className="flex gap-4">
                 <Button>
-                <a href="https://www.buymeacoffee.com/JonasBernard" target="_blank">
+                <a href="https://www.buymeacoffee.com/JonasBernard" target="_blank" rel="noreferrer">
                     <img src="/bmc-full-logo.svg" alt="Buy me a coffe" width={120} />
                 </a>
                 </Button>

@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 export const exportExcel = (result, unassignedKids) => {
     let workbook = worksheetAllKids(result, unassignedKids);
     
-    let workshops = [... new Set(result.map(edge => edge.Right.name))].sort();
+    let workshops = [...new Set(result.map(edge => edge.Right.name))].sort();
     for (let workshop of workshops) {
         let data = result.filter(edge => edge.Right.name === workshop).map(edge => { return {Name: edge.Left.name}});
         let worksheet = XLSX.utils.json_to_sheet(data);

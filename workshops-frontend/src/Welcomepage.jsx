@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function WelcomePage(props) {
   const setTab = props.setTab;
 
@@ -24,18 +22,18 @@ export default function WelcomePage(props) {
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
               Unter dem Reiter{" "}
-              <a className="cursor-pointer" onClick={() => setTab(0)}>
+              <button className="cursor-pointer text-indigo-600 dark:text-indigo-400" onClick={() => setTab(0)}>
                 Workshops
-              </a>{" "}
+              </button>{" "}
               kannst du verschiedene Gruppen mit ihrem Namen und einer maximalen
               Anzahl an Teilnehmern angeben.
             </p>
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
               Anschließend kannst du im daneben liegeneden Reiter{" "}
-              <a className="cursor-pointer" onClick={() => setTab(1)}>
+              <button className="cursor-pointer text-indigo-600 dark:text-indigo-400" onClick={() => setTab(1)}>
                 Teilnehmer
-              </a>{" "}
+              </button>{" "}
               Namen von Personen angeben, die in die Workshops eingeteilt
               werden sollen. Jeder kann bis zu drei Wünsche
               abgeben.
@@ -49,9 +47,9 @@ export default function WelcomePage(props) {
 
             <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
               Unter dem Reiter{" "}
-              <a className="cursor-pointer" onClick={() => setTab(2)}>
+              <button className="cursor-pointer text-indigo-600 dark:text-indigo-400" onClick={() => setTab(2)}>
                 Einteilen
-              </a>{" "}
+              </button>{" "}
               kannst du deine Daten an den Server übermitteln und eine
               Einteilung anfordern. Das Tool berechnet mit Hilfe eines mathmatischen
               Algorithmus eine Einteilung, die die maximalen
@@ -180,7 +178,7 @@ export default function WelcomePage(props) {
               und jeder Workshop mit maximal so vielen Teilnehmern verbunden ist, wie
               seine Kapazität es erlaubt.
               Da die Wünsche der Teilnehmer (mitunter) als gewichtet betrachtet werden,
-              ist es nicht nur das Ziel, ein irgendein Matching zu finden, sondern unter allen Matchings
+              ist es nicht nur das Ziel, ein irgendein Matching zu finden, sondern unter allen Matchings,
               die es gibt, eines zu finden, welches minimale Gesamtkosten realisiert.
               Die Gesamtkosten ergibt sich dabei aus der Summe aller Kosten der am Matching beteiligten Kanten.
               <br />
@@ -204,8 +202,8 @@ export default function WelcomePage(props) {
               Die Angaben, wie viel Wasser wo fließt, wird als Funktion in den Kanten
               dargestellt und als Fluss (Flow) bezeichnet.
               Da die Wünsche der Teilnehmer weiterhin als gewichtet betrachtet werden,
-              ist es nicht nur das Ziel, ein irgendeinen Flow zu finden, sondern unter allen Flows
-              die es gibt, eines zu finden, welches minimale Gesamtkosten realisiert. Ein Flow kann kann
+              ist es nicht nur das Ziel, ein irgendeinen Flow zu finden, sondern unter allen Flows,
+              die es gibt, einen zu finden, welcher minimale Gesamtkosten realisiert. Ein Flow kann kann
               in ein Matching überführt werden.
               <br/>
               <br/>
@@ -217,10 +215,14 @@ export default function WelcomePage(props) {
               Zum finden der kürzesten Pfade wird in diesem Tool
               eine Implementierung des Bellman-Ford-Moore-Algorithmus verwendet.
 
+              <br/>
+              <br/>
               Der Quellcode für die algorithmischen Teile des Tools befinden sich
-              hier: https://github.com/JonasBernard/min-cost-max-flow.
+              hier: <a href="https://github.com/JonasBernard/min-cost-max-flow">https://github.com/JonasBernard/min-cost-max-flow</a>.
 
-              Der Quellcode für die Webseite befindet sich hier: https://github.com/JonasBernard/datto.
+              <br/>
+              <br/>
+              Der Quellcode für die Webseite befindet sich hier: <a href="https://github.com/JonasBernard/datto">https://github.com/JonasBernard/datto</a>.
             </p>
           </div>
         </div>
