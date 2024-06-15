@@ -25,8 +25,17 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-
-    <script defer data-domain="gruppen-tool.jonasbernard.de" src="https://plausible.jonasbernard.de/js/script.js"></script>
+    <script>
+      let environment = "%NODE_ENV%";
+      if (environment === "production") {
+        var sc = document.createElement("script");
+        sc.setAttribute("src", "https://plausible.jonasbernard.de/js/script.js");
+        sc.setAttribute("type", "text/javascript");
+        sc.setAttribute("data-domain", "gruppen-tool.jonasbernard.de");
+        sc.defer = true;
+        document.head.appendChild(sc);
+      }
+    </script>
 
     <title>Gruppen-Tool</title>
   </head>
