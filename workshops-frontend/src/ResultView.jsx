@@ -1,6 +1,8 @@
 import Button from "./components/Button";
 import Card from "./components/Card";
 import { exportExcel } from "./exportExcel";
+import { Chart as ChartJS } from "chart.js/auto"; // This import is needed! 
+import { Doughnut, Bar} from "react-chartjs-2";
 
 function interpretStatus(status) {
     switch (status) {
@@ -25,10 +27,49 @@ export default function ResultView(props) {
     const asssignedKids = problemSolution.map((e1, e2) => e1.Left.name);
     const unassignedKids = result.kids.filter(kid => !(asssignedKids.includes(kid.name))).map(k => k.name);
 
+
+    ChartJS.defaults.color = '#fff';
+
+    const wishStats = {labels: [
+            'Erfüllte Erstwünsche',
+            'Erfüllte Zweitwünsche',
+            'Erfüllte Drittwünsche',
+            'Nicht erfüllte Wünsche'
+        ],
+        datasets: [{
+            label: 'Erfüllung der Wünsche',
+            data: [
+                problemSolution.filter(e => e.Left.wishes.indexOf(e.Right.name) === 0).length,
+                problemSolution.filter(e => e.Left.wishes.indexOf(e.Right.name) === 1).length,
+                problemSolution.filter(e => e.Left.wishes.indexOf(e.Right.name) === 2).length,
+                problemSolution.filter(e => e.Left.wishes.indexOf(e.Right.name) === -1).length
+            ],
+            backgroundColor: [
+                '#6366f1',
+                '#4338ca',
+                '#312e81',
+                '#1e1b4b',
+            ],
+            hoverOffset: 4
+    }]};
+
+    const workshops = [...new Set(problemSolution.map(e => e.Right.name))];
+
+    const workshopStats = {
+        labels: workshops,
+        datasets: [{
+          label: 'Verteilung der Teilnehmer',
+          data: workshops.map(w => problemSolution.filter(e => e.Right.name === w).length),
+          backgroundColor: ['#4338ca'],
+          borderWidth: 0,
+          borderRadius: 5,
+        }]
+      };
+
     return (
         <div>
             <span>{interpretStatus(status)}</span>
-            <div className="mt-3 flex flex-col items-stretch">
+            <div className="mt-3 flex items-stretch">
                 <Card className="rounded-xl bg-slate-100 dark:bg-gray-700 p-3 items-center justify-between mb-2">
                     <div className="flex items-center justify-between">
                         <span>Teilnehmer nach Alphabet sortiert:</span>
@@ -56,6 +97,10 @@ export default function ResultView(props) {
                         Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} ({asssignedKids.length}) <br />
                         Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"} ({unassignedKids.length})
                     </div>
+                </Card>
+                <Card>
+                    <Doughnut data={wishStats} />
+                    <Bar data={workshopStats}/>
                 </Card>
             </div>
         </div>
