@@ -108,7 +108,7 @@ export default function WelcomePage(props) {
               priorisiert, sofern die entsprechende Einstellung aktiv ist.
               <br />
               <br />
-              Dabei kann es passieren, dass bereits zutegeilte Teilnehmer,
+              Dabei kann es passieren, dass bereits zugeteilte Teilnehmer,
               wieder aus der Gruppe herausgenommen werden, wenn das Platz für
               einen Teilnehmer schafft, der sich diese Gruppe mit höherer
               Priorität wünscht.
