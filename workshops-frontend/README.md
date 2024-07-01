@@ -5,7 +5,7 @@ Frontend implementation of a tool to assign people into groups (workshops) using
 To start the application locally, depending on your environment you may have to start by executing
 ```
 nvm use latest
-```.
+```
 
 To install the dependencies, use
 ```
