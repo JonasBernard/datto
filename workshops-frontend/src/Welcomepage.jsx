@@ -202,7 +202,7 @@ export default function WelcomePage(props) {
               Die Angaben, wie viel Wasser wo fließt, wird als Funktion in den Kanten
               dargestellt und als Fluss (Flow) bezeichnet.
               Da die Wünsche der Teilnehmer weiterhin als gewichtet betrachtet werden,
-              ist es nicht nur das Ziel, ein irgendeinen Flow zu finden, sondern unter allen Flows,
+              ist es nicht nur das Ziel, irgendeinen Flow zu finden, sondern unter allen Flows,
               die es gibt, einen zu finden, welcher minimale Gesamtkosten realisiert. Ein Flow kann kann
               in ein Matching überführt werden.
               <br/>
@@ -212,7 +212,7 @@ export default function WelcomePage(props) {
               ist ein sogenannter "Successive Shortest Path"-Algorithmus. Hier wird ein anfänglicher
               Null-Fluss schrittweise entland eines (bezüglich der Kosten) kürzesten (günstigsten)
               Pfades in Richtung eines maxiamlen Flusses erhöht.
-              Zum finden der kürzesten Pfade wird in diesem Tool
+              Zum Finden der kürzesten Pfade wird in diesem Tool
               eine Implementierung des Bellman-Ford-Moore-Algorithmus verwendet.
 
               <br/>
