@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
+import ImportModalWithButton from "./importModal";
 
 export default function KidsList(props) {
     const kids = props.kids;
@@ -81,7 +82,17 @@ export default function KidsList(props) {
                                                 Dritt-Wunsch
                                             </th>
 
-                                            <th scope="col" className="relative py-3.5 px-4">
+                                            <th scope="col" className="relative py-3.5 px-2 text-sm whitespace-nowrap">
+                                                <ImportModalWithButton onImportKids={(data) => {
+                                                    setKids([
+                                                        ...data,
+                                                        ...kids
+                                                    ]);
+                                                }}
+                                                wishCount={wishCount}
+                                                workshopNames={workshopNames}>
+                                                    Aus Excel-Datei importieren
+                                                </ImportModalWithButton>
                                                 <span className="sr-only">Löschen</span>
                                             </th>
                                         </tr>
