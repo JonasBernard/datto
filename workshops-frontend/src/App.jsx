@@ -191,7 +191,7 @@ function App() {
             {currentTab === 2 && <div className="pt-3 flex flex-col">
               <SettingsTab initialSettings={settings} setSettings={setSettings}></SettingsTab>
               <div className="mt-12">
-                <Button disabled={isLoading} onClick={sendData}>
+                <Button disabled={isLoading} disabledWithloading={isLoading} onClick={sendData}>
                   {!isLoading ? "Gruppen jetzt einteilen" : "Gruppen werden eingeteilt..."}
                 </Button>
               </div>
