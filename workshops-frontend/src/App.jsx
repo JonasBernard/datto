@@ -8,6 +8,7 @@ import NavBar from "./Navbar";
 import Card from "./components/Card";
 import WelcomePage from "./Welcomepage";
 import SettingsTab from "./SettingsTab";
+import Badge from "./components/Badge";
 
 const APIBASE = process.env.REACT_APP_API_BASEURL || "http://localhost:5000";
 
@@ -130,18 +131,8 @@ function App() {
         <div className="flex flex-col items-center">
 
           <div className="m-4 absolute">
-                {infoMessage && (
-                  <div className="rounded-full shadow-lg bg-indigo-400 text-black p-4">
-                    {infoMessage}
-                    <span
-                      onClick={() => setInfoMessage("")}
-                      className="m-4 text-black cursor-pointer"
-                    >
-                      OK
-                    </span>
-                  </div>
-                )}
-              </div>
+            <Badge message={infoMessage} setMessage={setInfoMessage} className="bg-indigo-400"></Badge>
+          </div>
 
           <Card extraStyle="container">
             <div className="flex justify-between overflow-x-auto overflow-y-hidden border-b border-gray-200 whitespace-nowrap dark:border-gray-700">
@@ -205,30 +196,10 @@ function App() {
                 </Button>
               </div>
               <div className="m-4">
-                {errorMessage && (
-                  <div className="rounded-full bg-pink-400 text-black p-4">
-                    {errorMessage}
-                    <span
-                      onClick={() => setErrorMessage("")}
-                      className="m-4 text-black cursor-pointer"
-                    >
-                      x
-                    </span>
-                  </div>
-                )}
+                <Badge message={errorMessage} setMessage={setErrorMessage} className="bg-pink-400"></Badge>
               </div>
                <div className="m-4">
-                {warningMessage && (
-                  <div className="rounded-full bg-yellow-400 text-black p-4">
-                    {warningMessage}
-                    <span
-                      onClick={() => setWarningMessage("")}
-                      className="m-4 text-black cursor-pointer"
-                    >
-                      x
-                    </span>
-                  </div>
-                )}
+                <Badge message={warningMessage} setMessage={setWarningMessage} className="bg-yellow-400"></Badge>
               </div>
               <ResultView result={result} />
             </div>}
