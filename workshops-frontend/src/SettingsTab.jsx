@@ -9,10 +9,11 @@ export default function SettingsTab(props) {
     const [allowAssignmentToNonWishedWorkshop, setallowAssignmentToNonWishedWorkshop] = useState(initialSettings.allowAssignmentToNonWishedWorkshop !== undefined ? initialSettings.allowAssignmentToNonWishedWorkshop : true);
 
     useEffect(() => {
-        setSettings({
+        setSettings(oldSettings => { return {
             useWeighted: useWeighted,
-            allowAssignmentToNonWishedWorkshop: allowAssignmentToNonWishedWorkshop
-        })
+            allowAssignmentToNonWishedWorkshop: allowAssignmentToNonWishedWorkshop,
+            numberOfWishesPerKid: oldSettings.numberOfWishesPerKid
+        }})
     }, [useWeighted, allowAssignmentToNonWishedWorkshop, setSettings]);
 
     return (

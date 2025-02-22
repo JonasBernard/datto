@@ -74,10 +74,11 @@ function App() {
       setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.");
     }
 
-    if (kidsOrig.filter(k => {
+    const kidsWithDoubleWishes = kidsOrig.filter(k => {
       return k.wishes.filter(w => w !== "").length > [...new Set(k.wishes.filter(w => w !== ""))].length;
-    }).length > 0) {
-      setWarningMessage("Es gibt Teilnehmer die sich den gleichen Workshop mehrfach wünschen.");
+    });
+    if (kidsWithDoubleWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer die sich den gleichen Workshop mehrfach wünschen: " + kidsWithDoubleWishes.map(k => k.name).join(", ") + ".");
     }
     
     if (workshopsOrig.filter(w => w.name === "").length > 0) {
@@ -130,7 +131,7 @@ function App() {
         <NavBar></NavBar>
         <div className="flex flex-col items-center">
 
-          <div className="m-4 absolute">
+          <div className="m-4 absolute z-10">
             <Badge message={infoMessage} setMessage={setInfoMessage} className="bg-indigo-400"></Badge>
           </div>
 
@@ -185,7 +186,13 @@ function App() {
               <Workshoplist workshops={workshops} setWorkshops={setWorkshops} />
             </div>}
             {currentTab === 1 && <div className="pt-3">
-              <KidsList kids={kids} setKids={setKids} workshopNames={workshops.map(w => w.name)} />
+              <KidsList
+                kids={kids}
+                setKids={setKids}
+                workshopNames={workshops.map(w => w.name)}
+                initialSettings={settings}
+                setSettings={setSettings}
+              />
             </div>}
 
             {currentTab === 2 && <div className="pt-3 flex flex-col">

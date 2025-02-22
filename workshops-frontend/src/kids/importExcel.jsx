@@ -13,7 +13,10 @@ export const importExcel = async (file, wishCount) => {
     const finalData = dataAsArrayOfArrays.flatMap((lineInSheet) => {
         if (!Array.isArray(lineInSheet) || lineInSheet.length === 0) return [];
         if (!lineInSheet[0]) lineInSheet[0] = "Unbenannt";
-        const w = lineInSheet.slice(1, Math.min(lineInSheet.length, wishCount+1)).map(e => e === null ? "" : e);
+        const w = lineInSheet.slice(1, Math.min(lineInSheet.length, wishCount+1));
+        while (w.length < wishCount+1) {
+            w.push("");
+        }
         return [{"id": uuidv4(), "name": lineInSheet[0], "wishes": w}];
     });
 

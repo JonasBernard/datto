@@ -65,7 +65,7 @@ export default function ImportModalWithButton(props) {
     try {
       const [importedKids, sheetNames] = await importExcel(
         file,
-        props.wishCount
+        props.maxWishCount
       );
 
       if (sheetNames.length === 1) {
@@ -135,7 +135,7 @@ export default function ImportModalWithButton(props) {
               Tabellenblatt beachtet und in diesem müssen die Teilnehmer
               zeilenweise aufgelistet werden. Die erste Zeile muss bereits der
               erste Teilnehmer sein. Die Spalte A muss die Namen enthalten, die
-              Spalten B-D die Wünsche. Alle weiteren Spalten werden ignoriert.
+              Spalten B bis (höchstens) E die Wünsche. Alle weiteren Spalten werden ignoriert.
             </p>
 
             <Badge
@@ -164,30 +164,37 @@ export default function ImportModalWithButton(props) {
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className="py-3.5 px-4 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
                     >
                       Name
                     </th>
 
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
                     >
                       Erst-Wunsch
                     </th>
 
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
                     >
                       Zweit-Wunsch
                     </th>
 
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
                     >
                       Dritt-Wunsch
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
+                    >
+                      Viert-Wunsch
                     </th>
 
                     <th
@@ -202,13 +209,13 @@ export default function ImportModalWithButton(props) {
                   {importableKids.map((k) => (
                     <tr key={k.id}>
                       <td className="px-2 py-2 text-sm font-medium whitespace-nowrap">
-                        <h2 className="font-medium text-gray-800 dark:text-white ">
+                        <h2 className="font-medium text-gray-800 dark:text-white text-center">
                           {k.name}
                         </h2>
                       </td>
-                      {[...Array(props.wishCount)].map((x, i) => {
+                      {[...Array(props.maxWishCount)].map((x, i) => {
                         return (
-                          <td className={"px-2 py-2 text-sm whitespace-nowrap"}>
+                          <td className={"px-2 py-2 text-sm whitespace-nowrap dark:text-stone-100 text-center"}>
                             <span
                               className={
                                 props.workshopNames.includes(k.wishes[i]) ||
@@ -236,16 +243,16 @@ export default function ImportModalWithButton(props) {
 
                   
                 <tr className="text-gray-500 dark:text-gray-400 text-sm">
-                    <td className="p-1">
+                    <td className="p-1 text-center">
                     <span>Anzahl Teilnehmer: {importableKids.length}</span>
                     </td>
-                    {[...Array(props.wishCount)].map((x, i) => {
+                    {[...Array(props.maxWishCount)].map((x, i) => {
                     return (
-                        <td className="p-1" key={i}>
+                        <td className="p-1 text-center" key={i}>
                         <span>
                             Anzahl gesetzer Wünsche in dieser Spalte:{" "}
                             {importableKids.reduce(
-                            (a, b) => (b.wishes[i] !== "" ? a + 1 : a),
+                              (a, b) => (b.wishes[i] !== ""? a + 1 : a),
                             0
                             )}
                         </span>
