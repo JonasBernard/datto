@@ -203,7 +203,7 @@ function App() {
                 </Button>
               </div>
               <div className="m-4">
-                <Badge message={errorMessage} setMessage={setErrorMessage} className="bg-pink-400"></Badge>
+                <Badge message={errorMessage} setMessage={setErrorMessage} className="bg-rose-600 text-stone-100"></Badge>
               </div>
                <div className="m-4">
                 <Badge message={warningMessage} setMessage={setWarningMessage} className="bg-yellow-400"></Badge>

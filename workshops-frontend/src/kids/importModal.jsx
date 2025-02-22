@@ -120,7 +120,7 @@ export default function ImportModalWithButton(props) {
         onClick={() => {
           setOpenModal(true);
         }}
-        bgColor="bg-green-800"
+        bgColor="bg-green-800 focus:ring-green-200"
       >
         {props.children}
       </Button>
@@ -141,7 +141,7 @@ export default function ImportModalWithButton(props) {
             <Badge
               message={errorMessage}
               setMessage={setErrorMessage}
-              className="bg-pink-400"
+              className="bg-rose-600 text-stone-100"
             ></Badge>
             <Badge
               message={successMessage}
@@ -232,7 +232,7 @@ export default function ImportModalWithButton(props) {
 
                       <td className="px-2 py-2 text-sm whitespace-nowrap">
                         <Button
-                          bgColor="bg-red-500 dark:bg-pink-400 dark:text-black p-2"
+                          bgColor="bg-red-500 dark:bg-rose-600 dark:text-stone-100 p-2"
                           onClick={() => removeKid(k.id)}
                         >
                           Nicht importieren

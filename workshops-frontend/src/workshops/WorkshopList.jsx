@@ -44,11 +44,11 @@ export default function Workshoplist(props) {
                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead className="bg-gray-50 dark:bg-gray-800">
                                         <tr>
-                                            <th scope="col" className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                            <th scope="col" className="py-3.5 px-4 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
                                                 Name
                                             </th>
 
-                                            <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                            <th scope="col" className="px-4 py-3.5 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
                                                 Kapazität
                                             </th>
 
@@ -88,7 +88,7 @@ export default function Workshoplist(props) {
 
                                             <td className="px-2 py-2 text-sm whitespace-nowrap">
                                                 <Button
-                                                    bgColor="bg-red-500 dark:bg-pink-400 dark:text-black p-2"
+                                                    bgColor="bg-red-500 dark:bg-rose-600 dark:text-stone-100 p-2"
                                                     onClick={() => removeWorkshop(w.id)}>
                                                     Löschen
                                                 </Button>

@@ -35,7 +35,7 @@ export default function ResultView(props) {
                         <span>
                             <Button 
                             onClick={() => exportExcel(result.solution, unassignedKids)}
-                            bgColor="bg-green-800">Als Excel-Datei herunterladen</Button>
+                            bgColor="bg-green-800 focus:ring-green-200">Als Excel-Datei herunterladen</Button>
                         </span>
                     </div>
                     <div className="mt-2">
