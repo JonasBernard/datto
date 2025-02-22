@@ -15,7 +15,8 @@ export const exportExcel = (result, unassignedKids) => {
 
 const worksheetAllKids = (result, unassignedKids) => {
     const dataSorted = result.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => {
-        return {name: edge.Left.name, workshop: edge.Right.name}
+        const wishNr = edge.Left.wishes.indexOf(edge.Right.name) + 1;
+        return {name: edge.Left.name, workshop: edge.Right.name, correspondingWish: wishNr};
     });
 
     let dataAsCSV = formatCSV(dataSorted);
@@ -30,10 +31,10 @@ const worksheetAllKids = (result, unassignedKids) => {
 const SEP = ",";
 
 const formatCSV = (data) => {
-    let newData = ["Name","Workshop"].join(SEP) + "\n";
+    let newData = ["Name","Workshop","entspricht Wunsch Nr."].join(SEP) + "\n";
 
     data.forEach(e => {
-        newData += [e.name, e.workshop].join(SEP) + "\n";
+        newData += [e.name, e.workshop, e.correspondingWish > 0 ? e.correspondingWish.toString() : "wurde nicht gewünscht"].join(SEP) + "\n";
     });
     
     return newData;
