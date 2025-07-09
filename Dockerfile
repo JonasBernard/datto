@@ -21,6 +21,8 @@ COPY workshops-frontend/package.json ./
 COPY workshops-frontend/tailwind.config.js ./
 
 ENV REACT_APP_API_BASEURL="/api"
+ENV REACT_APP_POSTHOG_KEY="phc_9qcUXShTyQZi4PXtsx8F8FC1VvMdaGPXqNdC1vBfe7e"
+ENV REACT_APP_POSTHOG_HOST="https://eu.i.posthog.com"
 
 RUN npm install
 RUN npm run build

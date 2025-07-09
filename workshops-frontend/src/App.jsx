@@ -9,6 +9,7 @@ import Card from "./components/Card";
 import WelcomePage from "./Welcomepage";
 import SettingsTab from "./SettingsTab";
 import Badge from "./components/Badge";
+import { usePostHog } from "posthog-js/react";
 
 const APIBASE = process.env.REACT_APP_API_BASEURL || "http://localhost:5000";
 
@@ -42,6 +43,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [currentTab, setTab] = useState(3);
+
+  const posthog = usePostHog();
 
   useEffect(() => {
     let [loaded,k,w,s] = loadData();
@@ -106,6 +109,17 @@ function App() {
       }),
     })
       .then((response) => response.json())
+      .then((data) => {
+        posthog.capture('assignment_computed', {
+          requestPath: APIBASE + path,
+          requestBody: {
+            kids: kidsOrig,
+            workshops: workshopsOrig,
+            settings: settings,
+          },
+          response: data,
+        });
+      })
       .catch((err) => {
         setIsLoading(false);
         console.error(err);
