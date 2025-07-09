@@ -85,9 +85,12 @@ export default function WelcomePage(props) {
               deinem Browser gespeichert und erneut in die Tabellen gefüllt, wenn du diese Seite
               zu einem späteren Zeitpunkt wieder aufrufst. Außerdem werden die
               Workshops und Teilnehmer, sobald du auf "Gruppen jetzt einteilen" klickst, an einen Server geschickt, dort zur
-              Verarbeitung kurzzeitig gespeichert und dann gelöscht. Deine dabei entstandene
-              Einteilgung wird nicht gespeichert. Du kannst aber eine
-              Excel-Datei mit allen Namen und ihren Workshop herunterladen und abspeichern.
+              Verarbeitung kurzzeitig gespeichert und dann gelöscht. 
+              <br />
+              Zur Fehleranalyse werden Diagnoseberichte gespeichert und von mir zur Verbesserung der Webseite verwendet.
+              Diese enthalten ggf. deine IP-Adresse und Informationen über die Einteilung,
+              die du angefordert hast, und die Einstellungen, die du vorgenommen hast.
+              Die Daten werden ausschließlich in der EU verarbeitet und nicht verkauft.
             </p>
           </div>
 
