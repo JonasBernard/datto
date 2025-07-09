@@ -112,12 +112,12 @@ function App() {
       .then((data) => {
         posthog.capture('assignment_computed', {
           requestPath: APIBASE + path,
-          requestBody: {
+          requestBody: JSON.stringify({
             kids: kidsOrig,
             workshops: workshopsOrig,
             settings: settings,
-          },
-          response: data,
+          }),
+          response: JSON.stringify(data),
         });
       })
       .catch((err) => {
