@@ -70,7 +70,18 @@ function App() {
     const workshopsOrig = workshops;
 
     if (kidsOrig.map(k=>k.name).length > [...new Set(kidsOrig.map(k=>k.name))].length) {
-      setWarningMessage("Es gibt mehrere Teilnehmer mit dem gleichem Namen. Das kann zu Problemen führen.");
+      let doubleNames = kidsOrig.reduce((acc, k) => {
+        if (acc[k.name]) {
+          acc[k.name] += 1;
+        } else {
+          acc[k.name] = 1;
+        }
+        return acc;
+      }, {});
+      doubleNames = Object.entries(doubleNames).filter(tuple => tuple[1] > 1)
+      .map((k) => `${k[0]} (${k[1]}x)`)
+      .join(", ");
+      setWarningMessage("Es gibt mehrere Teilnehmer mit dem gleichem Namen. Das kann zu Problemen führen: " + doubleNames + ".");
     }
 
     if (kidsOrig.filter(k => k.name === "").length > 0) {
@@ -90,7 +101,7 @@ function App() {
     }
 
     if (workshopsOrig.filter(w => w.capacity === 0).length > 0) {
-      setErrorMessage("Es gibt einen Workshop mit Kapazität null. Dieser muss gelöscht werden bevor eine Einteilung gefunden werden kann.")
+      setErrorMessage("Es gibt minestens einen Workshop mit Kapazität null. Diese/r müssen/muss gelöscht werden bevor eine Einteilung gefunden werden kann: " + workshopsOrig.filter(w => w.capacity === 0).map(w => w.name).join(", ") + ".");
       return;
     }
 
@@ -119,6 +130,7 @@ function App() {
           }),
           response: JSON.stringify(data),
         });
+        return data;
       })
       .catch((err) => {
         setIsLoading(false);

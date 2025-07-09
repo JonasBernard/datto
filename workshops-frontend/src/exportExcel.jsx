@@ -14,6 +14,10 @@ export const exportExcel = (result, unassignedKids) => {
 }
 
 const worksheetAllKids = (result, unassignedKids) => {
+    if (!result || result.length === 0) {
+        return XLSX.utils.book_new();
+    }
+
     const dataSorted = result.sort((e1, e2) => e1.Left.name.localeCompare(e2.Left.name)).map(edge => {
         const wishNr = edge.Left.wishes.indexOf(edge.Right.name) + 1;
         return {name: edge.Left.name, workshop: edge.Right.name, correspondingWish: wishNr};

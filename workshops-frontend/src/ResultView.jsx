@@ -52,8 +52,9 @@ export default function ResultView(props) {
                         </div>
                     )})}
                     </div>
-                    <div className="mt-2">
-                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} ({asssignedKids.length}) <br />
+                    <div className="mt-8">
+                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} ({asssignedKids.length})
+                        <br /><br />
                         Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"} ({unassignedKids.length})
                     </div>
                 </Card>
