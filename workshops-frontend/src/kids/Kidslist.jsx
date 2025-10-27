@@ -13,7 +13,7 @@ export default function KidsList(props) {
     const setSettings = props.setSettings;
     const initialSettings = props.initialSettings;
 
-    const MAX_WISH_COUNT = 4;
+    const MAX_WISH_COUNT = 6;
     const DEFAULT_WISH_COUNT = 3;
 
     const [wishCount, setWishCount] = useState(initialSettings.numberOfWishesPerKid !== undefined ? initialSettings.numberOfWishesPerKid : DEFAULT_WISH_COUNT);
@@ -114,6 +114,14 @@ export default function KidsList(props) {
 
                                             {wishCount >= 4 ? (<th scope="col" className="px-4 py-3.5 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
                                                 Viert-Wunsch
+                                            </th>) : <></>}
+
+                                            {wishCount >= 5 ? (<th scope="col" className="px-4 py-3.5 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
+                                                Fünft-Wunsch
+                                            </th>) : <></>}
+
+                                            {wishCount >= 6 ? (<th scope="col" className="px-4 py-3.5 text-sm font-normal text-center text-gray-500 dark:text-gray-400">
+                                                Sechst-Wunsch
                                             </th>) : <></>}
 
                                             <th scope="col" className="relative py-3.5 px-2 text-sm whitespace-nowrap">

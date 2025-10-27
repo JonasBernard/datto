@@ -125,7 +125,7 @@ export default function ImportModalWithButton(props) {
         {props.children}
       </Button>
 
-      <Modal dismissible size="5xl" show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal dismissible size="6xl" show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Importieren</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
@@ -135,7 +135,7 @@ export default function ImportModalWithButton(props) {
               Tabellenblatt beachtet und in diesem müssen die Teilnehmer
               zeilenweise aufgelistet werden. Die erste Zeile muss bereits der
               erste Teilnehmer sein. Die Spalte A muss die Namen enthalten, die
-              Spalten B bis (höchstens) E die Wünsche. Alle weiteren Spalten werden ignoriert.
+              Spalten B, C, D, usw. die Wünsche. Alle weiteren Spalten werden ignoriert.
             </p>
 
             <Badge
@@ -199,6 +199,21 @@ export default function ImportModalWithButton(props) {
 
                     <th
                       scope="col"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
+                    >
+                      Fünft-Wunsch
+                    </th>
+
+
+                    <th
+                      scope="col"
+                      className="px-4 py-3.5 text-sm font-normal text-centertext-gray-500 dark:text-gray-400"
+                    >
+                      Sechst-Wunsch
+                    </th>
+
+                    <th
+                      scope="col"
                       className="relative py-3.5 px-2 text-sm whitespace-nowrap"
                     >
                       <span className="sr-only">Löschen</span>
@@ -219,7 +234,7 @@ export default function ImportModalWithButton(props) {
                             <span
                               className={
                                 props.workshopNames.includes(k.wishes[i]) ||
-                                k.wishes[i] === ""
+                                k.wishes[i] === "" || k.wishes[i] === null || k.wishes[i] === undefined
                                   ? ""
                                   : "px-4 py-1 rounded-xl bg-yellow-500 text-black"
                               }

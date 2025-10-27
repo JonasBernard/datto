@@ -25,7 +25,7 @@ func (n MatchNode[L, R]) String() string {
 
 type Child struct {
 	Name   string    `json:"name"`
-	Wishes [4]string `json:"wishes"`
+	Wishes [6]string `json:"wishes"`
 	Id     string    `json:"id"`
 }
 
