@@ -89,8 +89,9 @@ function App() {
     }
 
     const kidsWithDoubleWishes = kidsOrig.filter(k => {
-      return k.wishes.filter(w => w !== "").length > [...new Set(k.wishes.filter(w => w !== ""))].length;
+      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length > [...new Set(k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== ""))].length;
     });
+
     if (kidsWithDoubleWishes.length > 0) {
       setWarningMessage("Es gibt Teilnehmer die sich den gleichen Workshop mehrfach wünschen: " + kidsWithDoubleWishes.map(k => k.name).join(", ") + ".");
     }
