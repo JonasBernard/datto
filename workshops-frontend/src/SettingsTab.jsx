@@ -5,8 +5,8 @@ export default function SettingsTab(props) {
     const setSettings = props.setSettings;
     const initialSettings = props.initialSettings;
 
-    const [useWeighted, setUseWeighted] = useState(initialSettings.useWeighted !== undefined ? initialSettings.useWeighted : false);
-    const [allowAssignmentToNonWishedWorkshop, setallowAssignmentToNonWishedWorkshop] = useState(initialSettings.allowAssignmentToNonWishedWorkshop !== undefined ? initialSettings.allowAssignmentToNonWishedWorkshop : true);
+    const [useWeighted, setUseWeighted] = useState(initialSettings.useWeighted !== undefined ? initialSettings.useWeighted : true);
+    const [allowAssignmentToNonWishedWorkshop, setallowAssignmentToNonWishedWorkshop] = useState(initialSettings.allowAssignmentToNonWishedWorkshop !== undefined ? initialSettings.allowAssignmentToNonWishedWorkshop : false);
 
     useEffect(() => {
         setSettings(oldSettings => { return {
