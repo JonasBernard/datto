@@ -171,8 +171,8 @@ export default function KidsList(props) {
                                                 <h2 className="font-medium text-gray-800 dark:text-white text-center">{k.name}</h2>
                                             </td>
                                             {[...Array(wishCount)].map((x, i) => {
-                                                return <td className={"px-2 py-2 text-sm whitespace-nowrap"}>
-                                                    <span className={((workshopNames.includes(k.wishes[i]) || k.wishes[i] === "") ? "" : "px-4 py-1 rounded-xl bg-yellow-500 text-black")}>
+                                                return <td key={i} className={"px-2 py-2 text-sm whitespace-nowrap"}>
+                                                    <span className={((workshopNames.includes(k.wishes[i]) || k.wishes[i] === "" || k.wishes[i] === null || k.wishes[i] === undefined) ? "" : "px-4 py-1 rounded-xl bg-yellow-500 text-black")}>
                                                         {k.wishes[i]}
                                                     </span>
                                                 </td>
