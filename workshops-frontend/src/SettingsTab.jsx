@@ -21,8 +21,8 @@ export default function SettingsTab(props) {
         <div className="flex flex-col items-start gap-5">
         <Checkbox title="Wünsche als gewichtet betrachten"
             details="Wenn diese Option gesetzt ist, werden die Wünsche der Teilnehmer gewichtet. Die Gewichtung 
-            erfolgt klassisch über Erstwunsch, Zweitwunsch, Drittwunsch.
-            Wenn die Option nicht gesetzt wird, werden alle drei Wünsch gleich behandelt."
+            erfolgt klassisch über Erstwunsch, Zweitwunsch, usw.
+            Wenn die Option nicht gesetzt wird, werden alle Wünsch gleichberechtigt behandelt."
             checked={useWeighted}
             onChange={(e) => setUseWeighted(e.target.checked)}></Checkbox>
         <Checkbox title="Einteilung in nicht gewünschte Workshops zulassen" 
