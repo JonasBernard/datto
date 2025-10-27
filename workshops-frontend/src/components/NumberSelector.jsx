@@ -7,8 +7,12 @@ export default function NumberSelector(props) {
         props.setValue(oldValue => oldValue - 1);
     }
 
+    const preventDefault = (e) => {
+        e.preventDefault();
+    }
+
     // From https://flowbite.com/docs/forms/number-input/#min-and-max-values
-    return <form className="max-w-xs mx-auto flex items-center flex-col">
+    return <form className="max-w-xs mx-auto flex items-center flex-col" onSubmit={preventDefault}>
         <div className="relative flex items-center max-w-[12rem]">
             <button type="button" id="decrement-button" onClick={decrement} className={
                     "bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border"
