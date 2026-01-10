@@ -35,8 +35,12 @@ export default function WelcomePage(props) {
                 Teilnehmer
               </button>{" "}
               Namen von Personen angeben, die in die Workshops eingeteilt
-              werden sollen. Jeder kann bis zu drei Wünsche
+              werden sollen. Jeder kann – je nach Einstellung in der Ecke oben rechts – bis zu sechs Wünsche
               abgeben.
+            </p>
+
+            <p className="mt-6 text-sm text-gray-500 dark:text-gray-300">
+              Ein ausführlicheres Tutorial befindet sich <a href="https://www.patreon.com/posts/willkommen-das-113754704?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=postshare_creator&utm_content=join_link">auf Patreon.</a>
             </p>
           </div>
 
