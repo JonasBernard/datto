@@ -1,6 +1,6 @@
 # Datto
 
-Hosted at https://gruppen-tool.jonasbernard.de
+Hosted at https://gruppen-tool.de
 
 This is a tool to sort people into groups based on given wishes.
 See the READMEs in the folders for more information.
