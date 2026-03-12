@@ -77,7 +77,7 @@ export default function ImportModalWithButton(props) {
             sheetNames.join(", ") +
             ". Dieses Blatt wird importiert.",
           "Es wurde" +
-            (importedKids.length > 1 ? "n" : "") +
+            (importedKids.length != 1 ? "n" : "") +
             " " +
             importedKids.length +
             " Teilnehmer gefunden.",
