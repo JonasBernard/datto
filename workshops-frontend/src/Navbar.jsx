@@ -27,8 +27,6 @@ const realizeTheme = (theme) => {
 }
 
 export default function NavBar(props) {
-    const [isOpen, setIsOpen] = useState(false);
-
     const [theme, setTheme] = useState(loadTheme());
 
     const toggleTheme = () => {
