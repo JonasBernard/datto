@@ -23,13 +23,13 @@ func (n MatchNode[L, R]) String() string {
 	return n.Name
 }
 
-type Child struct {
+type Participant struct {
 	Name   string    `json:"name"`
 	Wishes [6]string `json:"wishes"`
 	Id     string    `json:"id"`
 }
 
-func (c Child) String() string {
+func (c Participant) String() string {
 	return c.Name
 }
 
@@ -43,19 +43,19 @@ type Workshop struct {
 }
 
 type SentWishes struct {
-	Kids      []Child
-	Workshops []Workshop
-	Settings  Settings `json:"settings,omitempty"`
+	Participants []Participant
+	Workshops    []Workshop
+	Settings     Settings `json:"settings,omitempty"`
 }
 
 type Settings struct {
 	AllowAssignmentToNonWishedWorkshop bool `json:"allowAssignmentToNonWishedWorkshop"`
-	NumberOfWishesPerKid int `json:"numberOfWishesPerKid"`
+	NumberOfWishesPerParticipant       int  `json:"numberOfWishesPerParticipant"`
 }
 
 type ResponseSolution struct {
-	Solution []matching.MatchingEdge[Child, Workshop] `json:"solution"`
-	Status   string                                   `json:"status"`
+	Solution []matching.MatchingEdge[Participant, Workshop] `json:"solution"`
+	Status   string                                         `json:"status"`
 }
 
 func AllowOriginLocalhost(w *http.ResponseWriter) {
@@ -121,20 +121,20 @@ func SolveGroupProblem(w http.ResponseWriter, req *http.Request, getEdgeWeight f
 		return
 	}
 
-	children := wished.Kids
+	participants := wished.Participants
 
 	workshops := wished.Workshops
 
 	allowAssignmentToNonWishedWorkshop := wished.Settings.AllowAssignmentToNonWishedWorkshop
-	numberOfWishesPerKid := wished.Settings.NumberOfWishesPerKid
+	numberOfWishesPerParticipant := wished.Settings.NumberOfWishesPerParticipant
 
-	matchingProblem := matching.MatchingProblem[Child, Workshop]{
-		Lefts:  children,
+	matchingProblem := matching.MatchingProblem[Participant, Workshop]{
+		Lefts:  participants,
 		Rights: workshops,
 	}
 
-	solutions, err := matchingProblem.SolveMany(1, func(c Child, w Workshop) (connect bool, weight float64) {
-		for j := 0; j < numberOfWishesPerKid; j++ {
+	solutions, err := matchingProblem.SolveMany(1, func(c Participant, w Workshop) (connect bool, weight float64) {
+		for j := 0; j < numberOfWishesPerParticipant; j++ {
 			wi := c.Wishes[j]
 
 			if NormalizeString(wi) == NormalizeString(w.Name) {
@@ -143,12 +143,12 @@ func SolveGroupProblem(w http.ResponseWriter, req *http.Request, getEdgeWeight f
 		}
 
 		// if false, 10 will be ignored
-		return allowAssignmentToNonWishedWorkshop, float64((numberOfWishesPerKid+1)*(numberOfWishesPerKid+1))
+		return allowAssignmentToNonWishedWorkshop, float64((numberOfWishesPerParticipant + 1) * (numberOfWishesPerParticipant + 1))
 	}, func(w Workshop) (capacity float64) {
 		return float64(w.Capacity)
 	})
 
-	if solutions == nil || len(solutions) < 1 {
+	if len(solutions) < 1 {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 

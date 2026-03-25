@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import KidsList from "./kids/KidsList";
+import ParticipantsList from "./participants/ParticipantsList";
 import Workshoplist from "./workshops/WorkshopList";
 import ResultView from "./assignment/ResultView";
 import Button from "./components/Button";
@@ -14,25 +14,37 @@ import SummaryView from "./assignment/SummaryView";
 
 const APIBASE = process.env.REACT_APP_API_BASEURL || "http://localhost:5000";
 
-function saveData(kids, workshops, settings) {
-  localStorage.dataV1 = JSON.stringify({
-    kids: kids,
+function saveData(participants, workshops, settings) {
+  localStorage.dataV2 = JSON.stringify({
+    participants: participants,
     workshops: workshops,
     settings: settings,
   })
 }
 
 function loadData() {
+  if (localStorage.dataV2) {
+    let data = JSON.parse(localStorage.dataV2);
+    if (data.participants.length > 0 || data.workshops.length > 0)
+      return [true, data.participants, data.workshops, data.settings]
+  }
   if (localStorage.dataV1) {
     let data = JSON.parse(localStorage.dataV1);
-    if (data.kids.length > 0 || data.workshops.length > 0)
-      return [true, data.kids, data.workshops, data.settings]
+    let numberOfWishesPerKid = data.settings.numberOfWishesPerKid;
+    data.settings.numberOfWishesPerParticipant = numberOfWishesPerKid;
+    data.settings.numberOfWishesPerKid = undefined;
+
+    localStorage.removeItem("dataV1");
+    saveData(data.kids, data.workshops, data.settings);
+    if (data.kids.length > 0 || data.workshops.length > 0) {
+      return [true, data.kids, data.workshops, data.settings];
+    }
   }
   return [false, [], []];
 }
 
 function App() {
-  const [kids, setKids] = useState([]);
+  const [participants, setParticipants] = useState([]);
   const [workshops, setWorkshops] = useState([]);
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -51,7 +63,7 @@ function App() {
     let [loaded,k,w,s] = loadData();
     if (loaded) {
       
-      setKids(k); setWorkshops(w); setTab(2);
+      setParticipants(k); setWorkshops(w); setTab(2);
       s && setSettings(s);
 
       setInfoMessage("Es wurden Daten aus deiner letzten Sitzung wiederhergestellt.");
@@ -59,19 +71,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    saveData(kids, workshops, settings);
-  }, [kids, workshops, settings]);
+    saveData(participants, workshops, settings);
+  }, [participants, workshops, settings]);
 
   const sendData = () => {
     setErrorMessage("");
     setWarningMessage("");
     setRequestResult(null);
 
-    const kidsOrig = kids;
+    const participantsOrig = participants;
     const workshopsOrig = workshops;
 
-    if (kidsOrig.map(k=>k.name).length > [...new Set(kidsOrig.map(k=>k.name))].length) {
-      let doubleNames = kidsOrig.reduce((acc, k) => {
+    if (participantsOrig.map(k=>k.name).length > [...new Set(participantsOrig.map(k=>k.name))].length) {
+      let doubleNames = participantsOrig.reduce((acc, k) => {
         if (acc[k.name]) {
           acc[k.name] += 1;
         } else {
@@ -85,30 +97,30 @@ function App() {
       setWarningMessage("Es gibt mehrere Teilnehmer mit dem gleichem Namen. Das kann zu Problemen führen: " + doubleNames + ".");
     }
 
-    if (kidsOrig.filter(k => k.name === "").length > 0) {
+    if (participantsOrig.filter(k => k.name === "").length > 0) {
       setWarningMessage("Es gibt einen Teilnehmer mit leerem Namen. Das kann zu Problemen führen.");
     }
 
-    const kidsWithDoubleWishes = kidsOrig.filter(k => {
-      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length > [...new Set(k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== ""))].length;
+    const participantsWithDoubleWishes = participantsOrig.filter(k => {
+      return k.wishes.slice(0, settings.numberOfWishesPerParticipant).filter(w => w !== "").length > [...new Set(k.wishes.slice(0, settings.numberOfWishesPerParticipant).filter(w => w !== ""))].length;
     });
 
-    if (kidsWithDoubleWishes.length > 0) {
-      setWarningMessage("Es gibt Teilnehmer, die sich den gleichen Workshop mehrfach wünschen: " + kidsWithDoubleWishes.map(k => k.name).join(", ") + ".");
+    if (participantsWithDoubleWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer, die sich den gleichen Workshop mehrfach wünschen: " + participantsWithDoubleWishes.map(k => k.name).join(", ") + ".");
     }
 
-    const kidsWithEmptyWishes = kidsOrig.filter(k => {
-      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length < settings.numberOfWishesPerKid;
+    const participantsWithEmptyWishes = participantsOrig.filter(k => {
+      return k.wishes.slice(0, settings.numberOfWishesPerParticipant).filter(w => w !== "").length < settings.numberOfWishesPerParticipant;
     });
-    if (kidsWithEmptyWishes.length > 0) {
-      setWarningMessage("Es gibt Teilnehmer, die nicht alle Wunsch-Slots ausgefüllt haben: " + kidsWithEmptyWishes.map(k => k.name).join(", ") + ".");
+    if (participantsWithEmptyWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer, die nicht alle Wunsch-Slots ausgefüllt haben: " + participantsWithEmptyWishes.map(k => k.name).join(", ") + ".");
     }
 
-    const kidsWithNoWishes = kidsOrig.filter(k => {
-      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length === 0;
+    const participantsWithNoWishes = participantsOrig.filter(k => {
+      return k.wishes.slice(0, settings.numberOfWishesPerParticipant).filter(w => w !== "").length === 0;
     });
-    if (kidsWithNoWishes.length > 0) {
-      setWarningMessage("Es gibt Teilnehmer, die sich nichts wünschen: " + kidsWithNoWishes.map(k => k.name).join(", ") + ".");
+    if (participantsWithNoWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer, die sich nichts wünschen: " + participantsWithNoWishes.map(k => k.name).join(", ") + ".");
     }
     
     if (workshopsOrig.filter(w => w.name === "").length > 0) {
@@ -121,7 +133,7 @@ function App() {
       return;
     }
 
-    if (kidsOrig.length === 0) {
+    if (participantsOrig.length === 0) {
       setErrorMessage("Es gibt keine Teilnehmer. Bitte füge Teilnehmer hinzu bevor du die Einteilung berechnen lässt.");
       return;
     }
@@ -131,7 +143,7 @@ function App() {
       return;
     }
 
-    saveData(kidsOrig, workshopsOrig);
+    saveData(participantsOrig, workshopsOrig);
 
     const path = settings.useWeighted ? "/weighted" : "/unweighted";
 
@@ -140,7 +152,7 @@ function App() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        kids: kidsOrig,
+        participants: participantsOrig,
         workshops: workshopsOrig,
         settings: settings,
       }),
@@ -150,7 +162,7 @@ function App() {
         posthog.capture('assignment_computed', {
           requestPath: APIBASE + path,
           requestBody: JSON.stringify({
-            kids: kidsOrig,
+            participants: participantsOrig,
             workshops: workshopsOrig,
             settings: settings,
           }),
@@ -167,7 +179,7 @@ function App() {
         setIsLoading(false);
         const result = {
           ...actualData,
-          kids: kidsOrig,
+          participants: participantsOrig,
           workshops: workshopsOrig,
         }
         setRequestResult(result);
@@ -238,9 +250,9 @@ function App() {
               <Workshoplist workshops={workshops} setWorkshops={setWorkshops} />
             </div>}
             {currentTab === 1 && <div className="pt-3">
-              <KidsList
-                kids={kids}
-                setKids={setKids}
+              <ParticipantsList
+                participants={participants}
+                setParticipants={setParticipants}
                 workshopNames={workshops.map(w => w.name)}
                 initialSettings={settings}
                 setSettings={setSettings}
@@ -248,7 +260,7 @@ function App() {
             </div>}
 
             {currentTab === 2 && <div className="pt-3 flex flex-col">
-              <SummaryView kids={kids} workshops={workshops} settings={settings} />
+              <SummaryView participants={participants} workshops={workshops} settings={settings} />
               <SettingsTab initialSettings={settings} setSettings={setSettings}></SettingsTab>
               <div className="mt-12">
                 <Button disabled={isLoading} disabledWithloading={isLoading} onClick={sendData}>

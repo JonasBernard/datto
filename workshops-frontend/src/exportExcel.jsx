@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx/xlsx.mjs';
 
-export const exportExcel = (result, unassignedKids) => {
-    let workbook = worksheetAllKids(result, unassignedKids);
+export const exportExcel = (result, unassignedParticipants) => {
+    let workbook = worksheetAllParticipants(result, unassignedParticipants);
     
     let workshops = [...new Set(result.map(edge => edge.Right.name))].sort();
     for (let workshop of workshops) {
@@ -13,7 +13,7 @@ export const exportExcel = (result, unassignedKids) => {
     XLSX.writeFile(workbook, "Workshopeinteilung.xlsx", { compression: false });
 }
 
-const worksheetAllKids = (result, unassignedKids) => {
+const worksheetAllParticipants = (result, unassignedParticipants) => {
     if (!result || result.length === 0) {
         return XLSX.utils.book_new();
     }
@@ -25,8 +25,8 @@ const worksheetAllKids = (result, unassignedKids) => {
 
     let dataAsCSV = formatCSV(dataSorted);
 
-    if (unassignedKids.length > 0)
-        dataAsCSV += "\n" + ["Nicht eingeteilt", unassignedKids.join(", ")].join(SEP) + "\n";
+    if (unassignedParticipants.length > 0)
+        dataAsCSV += "\n" + ["Nicht eingeteilt", unassignedParticipants.join(", ")].join(SEP) + "\n";
 
     let workbook = XLSX.read(dataAsCSV, { type: "binary" });
     return workbook;

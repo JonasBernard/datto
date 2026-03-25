@@ -22,8 +22,8 @@ export default function ResultView(props) {
     const problemSolution = result.solution || [];
     const status = result.status || "unknown-status";
 
-    const asssignedKids = problemSolution.map((e1, e2) => e1.Left.name);
-    const unassignedKids = result.kids.filter(kid => !(asssignedKids.includes(kid.name))).map(k => k.name);
+    const asssignedParticipants = problemSolution.map((e1, e2) => e1.Left.name);
+    const unassignedParticipants = result.participants.filter(participant => !(asssignedParticipants.includes(participant.name))).map(k => k.name);
 
     return (
         <div>
@@ -34,7 +34,7 @@ export default function ResultView(props) {
                         <span>Teilnehmer nach Alphabet sortiert:</span>
                         <span>
                             <Button 
-                            onClick={() => exportExcel(result.solution, unassignedKids)}
+                            onClick={() => exportExcel(result.solution, unassignedParticipants)}
                             bgColor="bg-green-800 focus:ring-green-200">Als Excel-Datei herunterladen</Button>
                         </span>
                     </div>
@@ -53,9 +53,9 @@ export default function ResultView(props) {
                     )})}
                     </div>
                     <div className="mt-8">
-                        Zugeteilt wurden: {asssignedKids.join(", ") || "Niemand"} ({asssignedKids.length})
+                        Zugeteilt wurden: {asssignedParticipants.join(", ") || "Niemand"} ({asssignedParticipants.length})
                         <br /><br />
-                        Nicht zugeteilt wurden: {unassignedKids.join(", ") || "Niemand"} ({unassignedKids.length})
+                        Nicht zugeteilt wurden: {unassignedParticipants.join(", ") || "Niemand"} ({unassignedParticipants.length})
                     </div>
                 </Card>
             </div>

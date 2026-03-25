@@ -6,9 +6,9 @@ import ImportExcelModal from "./importExcelModal";
 import NumberSelector from "../components/NumberSelector";
 import ImportJSONModal from "./importJSONModal";
 
-export default function KidsList(props) {
-    const kids = props.kids;
-    const setKids = props.setKids;
+export default function ParticipantsList(props) {
+    const participants = props.participants;
+    const setParticipants = props.setParticipants;
     const workshopNames = props.workshopNames;
 
     const setSettings = props.setSettings;
@@ -17,13 +17,13 @@ export default function KidsList(props) {
     const MAX_WISH_COUNT = 6;
     const DEFAULT_WISH_COUNT = 3;
 
-    const [wishCount, setWishCount] = useState(initialSettings.numberOfWishesPerKid !== undefined ? initialSettings.numberOfWishesPerKid : DEFAULT_WISH_COUNT);
+    const [wishCount, setWishCount] = useState(initialSettings.numberOfWishesPerParticipant !== undefined ? initialSettings.numberOfWishesPerParticipant : DEFAULT_WISH_COUNT);
 
     useEffect(() => {
         setSettings(oldSettings => { return {
             useWeighted: oldSettings.useWeighted,
             allowAssignmentToNonWishedWorkshop: oldSettings.allowAssignmentToNonWishedWorkshop,
-            numberOfWishesPerKid: wishCount
+            numberOfWishesPerParticipant: wishCount
         }})
     }, [wishCount, setSettings]);
 
@@ -32,7 +32,7 @@ export default function KidsList(props) {
 
     const nameInputRef = useRef(null);
 
-    const addKid = () => {
+    const addParticipant = () => {
         let wishes = newWishList; // Data from the form
         while (wishes.length < MAX_WISH_COUNT) {
             wishes.push("");
@@ -41,9 +41,9 @@ export default function KidsList(props) {
             wishes.pop();
         }
 
-        setKids([
+        setParticipants([
             {"id": uuidv4(), "name": newName, "wishes": wishes},
-            ...kids
+            ...participants
         ]);
         setNewWishList([...Array(MAX_WISH_COUNT).fill('')]);
         setNewName('');
@@ -51,8 +51,8 @@ export default function KidsList(props) {
         nameInputRef.current.focus();
     }
 
-    const removeKid = (id) => {
-        setKids(kids.filter(k => k.id !== id));
+    const removeParticipant = (id) => {
+        setParticipants(participants.filter(k => k.id !== id));
     }
 
     const updateWish = (index, wish) => {
@@ -126,10 +126,10 @@ export default function KidsList(props) {
                                             </th>) : <></>}
 
                                             <th scope="col" className="relative py-3.5 px-2 text-sm whitespace-nowrap">
-                                                <ImportExcelModal onImportKids={(data) => {
-                                                    setKids([
+                                                <ImportExcelModal onImportParticipants={(data) => {
+                                                    setParticipants([
                                                         ...data,
-                                                        ...kids
+                                                        ...participants
                                                     ]);
                                                 }}
                                                 wishCount={wishCount}
@@ -139,10 +139,10 @@ export default function KidsList(props) {
                                                 </ImportExcelModal>
                                                 <br/>
                                                 { process.env.NODE_ENV !== 'production' && 
-                                                    <ImportJSONModal onImportKids={(data) => {
-                                                        setKids([
+                                                    <ImportJSONModal onImportParticipants={(data) => {
+                                                        setParticipants([
                                                             ...data,
-                                                            ...kids
+                                                            ...participants
                                                         ]);
                                                     }}
                                                     wishCount={wishCount}
@@ -167,20 +167,20 @@ export default function KidsList(props) {
                                                     key={i}
                                                     extraStyle="rounded-none" placeholder={i+1 + ". Wunsch"} 
                                                     value={newWishList[i]} onChange={e => updateWish(i, e.target.value)}
-                                                    onKeyDown={(e, trAuoCom) => (i === wishCount-1 && (e.key === 'Enter') && !trAuoCom) && (e.preventDefault() || addKid())}
+                                                    onKeyDown={(e, trAuoCom) => (i === wishCount-1 && (e.key === 'Enter') && !trAuoCom) && (e.preventDefault() || addParticipant())}
                                                     autocomplete={workshopNames}
                                                     autocompleteSetValue={value => updateWish(i, value)}
                                                 />
                                             </td>
                                         })}
                                         <td className="p-2 text-sm whitespace-nowrap">
-                                            <Button onClick={() => addKid()}>
+                                            <Button onClick={() => addParticipant()}>
                                                 Hinzufügen
                                             </Button>
                                         </td>
                                     </tr>
 
-                                    {kids.map(k => (
+                                    {participants.map(k => (
                                         <tr key={k.id}>
                                             <td className="px-2 py-2 text-sm font-medium whitespace-nowrap">
                                                 <h2 className="font-medium text-gray-800 dark:text-white text-center">{k.name}</h2>
@@ -196,20 +196,20 @@ export default function KidsList(props) {
                                             <td className="px-2 py-2 text-sm whitespace-nowrap">
                                                 <Button
                                                     bgColor="bg-red-500 dark:bg-rose-600 dark:text-stone-100 p-2"
-                                                    onClick={() => removeKid(k.id)}>
+                                                    onClick={() => removeParticipant(k.id)}>
                                                     Löschen
                                                 </Button>
                                             </td>
                                         </tr>
                                     ))}
 
-                                    {kids.length > 0 && <tr className="text-gray-500 dark:text-gray-400 text-sm">
+                                    {participants.length > 0 && <tr className="text-gray-500 dark:text-gray-400 text-sm">
                                         <td className="p-1">
-                                            <span>Anzahl Teilnehmer: {kids.length}</span>
+                                            <span>Anzahl Teilnehmer: {participants.length}</span>
                                         </td>
                                         {[...Array(wishCount)].map((x, i) => {
                                         return <td className="p-1" key={i}>
-                                            <span>Anzahl gesetzer Wünsche in dieser Spalte: {kids.reduce((a,b) => b.wishes[i] !== "" ? a + 1 : a, 0)}</span>
+                                            <span>Anzahl gesetzer Wünsche in dieser Spalte: {participants.reduce((a,b) => b.wishes[i] !== "" ? a + 1 : a, 0)}</span>
                                         </td>
                                         })}
                                         <td></td>

@@ -12,7 +12,7 @@ export default function SettingsTab(props) {
         setSettings(oldSettings => { return {
             useWeighted: useWeighted,
             allowAssignmentToNonWishedWorkshop: allowAssignmentToNonWishedWorkshop,
-            numberOfWishesPerKid: oldSettings.numberOfWishesPerKid
+            numberOfWishesPerParticipant: oldSettings.numberOfWishesPerParticipant
         }})
     }, [useWeighted, allowAssignmentToNonWishedWorkshop, setSettings]);
 

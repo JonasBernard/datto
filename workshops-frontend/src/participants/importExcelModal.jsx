@@ -7,17 +7,17 @@ import { importExcel } from "./importExcel";
 
 export default function ImportExcelModal(props) {
   const [openModal, setOpenModal] = useState(false);
-  const [importableKids, setImportableKids] = useState([]);
+  const [importableParticipants, setImportableParticipants] = useState([]);
 
   const ImportNow = () => {
-    props.onImportKids(importableKids);
-    setImportableKids([]);
+    props.onImportParticipants(importableParticipants);
+    setImportableParticipants([]);
     setSuccessMessage("");
     setErrorMessage("");
   };
 
-  const removeKid = (id) => {
-    setImportableKids(importableKids.filter(k => k.id !== id));
+  const removeParticipant = (id) => {
+    setImportableParticipants(importableParticipants.filter(k => k.id !== id));
 }
 
   const onDropFile = (event) => {
@@ -63,7 +63,7 @@ export default function ImportExcelModal(props) {
     }
 
     try {
-      const [importedKids, sheetNames] = await importExcel(
+      const [importedParticipants, sheetNames] = await importExcel(
         file,
         props.maxWishCount
       );
@@ -77,9 +77,9 @@ export default function ImportExcelModal(props) {
             sheetNames.join(", ") +
             ". Dieses Blatt wird importiert.",
           "Es wurde" +
-            (importedKids.length !== 1 ? "n" : "") +
+            (importedParticipants.length !== 1 ? "n" : "") +
             " " +
-            importedKids.length +
+            importedParticipants.length +
             " Teilnehmer gefunden.",
         ]);
       } else {
@@ -94,14 +94,14 @@ export default function ImportExcelModal(props) {
             sheetNames[0] +
             ") wird importiert.",
           "Es wurde" +
-            (importedKids.length > 1 ? "n" : "") +
+            (importedParticipants.length > 1 ? "n" : "") +
             " " +
-            importedKids.length +
+            importedParticipants.length +
             " Teilnehmer gefunden.",
         ]);
       }
 
-      setImportableKids(importedKids);
+      setImportableParticipants(importedParticipants);
 
       resetTargetForm();
     } catch (e) {
@@ -158,7 +158,7 @@ export default function ImportExcelModal(props) {
               ></FileDropzone>
             )}
 
-            {importableKids.length > 0 && (
+            {importableParticipants.length > 0 && (
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
@@ -221,7 +221,7 @@ export default function ImportExcelModal(props) {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900 dark:bg-opacity-40">
-                  {importableKids.map((k) => (
+                  {importableParticipants.map((k) => (
                     <tr key={k.id}>
                       <td className="px-2 py-2 text-sm font-medium whitespace-nowrap">
                         <h2 className="font-medium text-gray-800 dark:text-white text-center">
@@ -248,7 +248,7 @@ export default function ImportExcelModal(props) {
                       <td className="px-2 py-2 text-sm whitespace-nowrap">
                         <Button
                           bgColor="bg-red-500 dark:bg-rose-600 dark:text-stone-100 p-2"
-                          onClick={() => removeKid(k.id)}
+                          onClick={() => removeParticipant(k.id)}
                         >
                           Nicht importieren
                         </Button>
@@ -259,14 +259,14 @@ export default function ImportExcelModal(props) {
                   
                 <tr className="text-gray-500 dark:text-gray-400 text-sm">
                     <td className="p-1 text-center">
-                    <span>Anzahl Teilnehmer: {importableKids.length}</span>
+                    <span>Anzahl Teilnehmer: {importableParticipants.length}</span>
                     </td>
                     {[...Array(props.maxWishCount)].map((x, i) => {
                     return (
                         <td className="p-1 text-center" key={i}>
                         <span>
                             Anzahl gesetzer Wünsche in dieser Spalte:{" "}
-                            {importableKids.reduce(
+                            {importableParticipants.reduce(
                               (a, b) => (b.wishes[i] !== ""? a + 1 : a),
                             0
                             )}
@@ -286,7 +286,7 @@ export default function ImportExcelModal(props) {
             <Button
               disabled={
                 errorMessage !== "" ||
-                importableKids.length === 0
+                importableParticipants.length === 0
               }
               onClick={() => {
                 ImportNow();
