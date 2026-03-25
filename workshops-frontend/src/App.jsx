@@ -94,7 +94,21 @@ function App() {
     });
 
     if (kidsWithDoubleWishes.length > 0) {
-      setWarningMessage("Es gibt Teilnehmer die sich den gleichen Workshop mehrfach wünschen: " + kidsWithDoubleWishes.map(k => k.name).join(", ") + ".");
+      setWarningMessage("Es gibt Teilnehmer, die sich den gleichen Workshop mehrfach wünschen: " + kidsWithDoubleWishes.map(k => k.name).join(", ") + ".");
+    }
+
+    const kidsWithEmptyWishes = kidsOrig.filter(k => {
+      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length < settings.numberOfWishesPerKid;
+    });
+    if (kidsWithEmptyWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer, die nicht alle Wunsch-Slots ausgefüllt haben: " + kidsWithEmptyWishes.map(k => k.name).join(", ") + ".");
+    }
+
+    const kidsWithNoWishes = kidsOrig.filter(k => {
+      return k.wishes.slice(0, settings.numberOfWishesPerKid).filter(w => w !== "").length === 0;
+    });
+    if (kidsWithNoWishes.length > 0) {
+      setWarningMessage("Es gibt Teilnehmer, die sich nichts wünschen: " + kidsWithNoWishes.map(k => k.name).join(", ") + ".");
     }
     
     if (workshopsOrig.filter(w => w.name === "").length > 0) {
@@ -104,6 +118,16 @@ function App() {
 
     if (workshopsOrig.filter(w => w.capacity === 0).length > 0) {
       setErrorMessage("Es gibt minestens einen Workshop mit Kapazität null. Diese/r müssen/muss gelöscht werden bevor eine Einteilung gefunden werden kann: " + workshopsOrig.filter(w => w.capacity === 0).map(w => w.name).join(", ") + ".");
+      return;
+    }
+
+    if (kidsOrig.length === 0) {
+      setErrorMessage("Es gibt keine Teilnehmer. Bitte füge Teilnehmer hinzu bevor du die Einteilung berechnen lässt.");
+      return;
+    }
+
+    if (workshopsOrig.length === 0) {
+      setErrorMessage("Es gibt keine Workshops. Bitte füge Workshops hinzu bevor du die Einteilung berechnen lässt.");
       return;
     }
 
