@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
-import ImportModalWithButton from "./importModal";
+import ImportExcelModal from "./importExcelModal";
 import NumberSelector from "../components/NumberSelector";
+import ImportJSONModal from "./importJSONModal";
 
 export default function KidsList(props) {
     const kids = props.kids;
@@ -125,7 +126,7 @@ export default function KidsList(props) {
                                             </th>) : <></>}
 
                                             <th scope="col" className="relative py-3.5 px-2 text-sm whitespace-nowrap">
-                                                <ImportModalWithButton onImportKids={(data) => {
+                                                <ImportExcelModal onImportKids={(data) => {
                                                     setKids([
                                                         ...data,
                                                         ...kids
@@ -135,7 +136,21 @@ export default function KidsList(props) {
                                                 maxWishCount={MAX_WISH_COUNT}
                                                 workshopNames={workshopNames}>
                                                     Aus Excel-Datei importieren
-                                                </ImportModalWithButton>
+                                                </ImportExcelModal>
+                                                <br/>
+                                                { process.env.NODE_ENV !== 'production' && 
+                                                    <ImportJSONModal onImportKids={(data) => {
+                                                        setKids([
+                                                            ...data,
+                                                            ...kids
+                                                        ]);
+                                                    }}
+                                                    wishCount={wishCount}
+                                                    maxWishCount={MAX_WISH_COUNT}
+                                                    workshopNames={workshopNames}>
+                                                        JSON import
+                                                    </ImportJSONModal>
+                                                }
                                                 <span className="sr-only">Löschen</span>
                                             </th>
                                         </tr>

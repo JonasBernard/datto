@@ -1,6 +1,6 @@
-import Button from "./components/Button";
-import Card from "./components/Card";
-import { exportExcel } from "./exportExcel";
+import Button from "../components/Button";
+import Card from "../components/Card";
+import { exportExcel } from "../exportExcel";
 
 function interpretStatus(status) {
     switch (status) {

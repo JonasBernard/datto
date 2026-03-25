@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import KidsList from "./kids/Kidslist";
+import KidsList from "./kids/KidsList";
 import Workshoplist from "./workshops/WorkshopList";
-import ResultView from "./ResultView";
+import ResultView from "./assignment/ResultView";
 import Button from "./components/Button";
 import NavBar from "./Navbar";
 import Card from "./components/Card";
 import WelcomePage from "./Welcomepage";
-import SettingsTab from "./SettingsTab";
+import SettingsTab from "./assignment/SettingsTab";
 import Badge from "./components/Badge";
 import { usePostHog } from "posthog-js/react";
+import SummaryView from "./assignment/SummaryView";
 
 const APIBASE = process.env.REACT_APP_API_BASEURL || "http://localhost:5000";
 
@@ -223,6 +224,7 @@ function App() {
             </div>}
 
             {currentTab === 2 && <div className="pt-3 flex flex-col">
+              <SummaryView kids={kids} workshops={workshops} settings={settings} />
               <SettingsTab initialSettings={settings} setSettings={setSettings}></SettingsTab>
               <div className="mt-12">
                 <Button disabled={isLoading} disabledWithloading={isLoading} onClick={sendData}>

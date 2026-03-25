@@ -3,9 +3,8 @@ import { useState } from "react";
 import Button from "../components/Button";
 import FileDropzone from "../components/FileDropzone";
 import Badge from "../components/Badge";
-import { importExcel } from "./importExcel";
 
-export default function ImportModalWithButton(props) {
+export default function ImportJSONModal(props) {
   const [openModal, setOpenModal] = useState(false);
   const [importableKids, setImportableKids] = useState([]);
 
@@ -54,52 +53,27 @@ export default function ImportModalWithButton(props) {
   }
 
   const onSelectFile = async (file, resetTargetForm) => {
-    if (!file.name.endsWith(".xlsx")) {
+    if (!file.name.endsWith(".json")) {
       setErrorMessage(
-        "Es wurde keine Excel-Datei ausgewählt. Es können nur Excel-Dateien importiert werden."
+        "Es wurde keine JSON-Datei ausgewählt. Es können nur JSON-Dateien importiert werden."
       );
       resetTargetForm();
       return;
     }
 
     try {
-      const [importedKids, sheetNames] = await importExcel(
-        file,
-        props.maxWishCount
-      );
+      const importedKids = await JSON.parse(await file.text())["kids"];
 
-      if (sheetNames.length === 1) {
         setSuccessMessage([
-          "Es wurde folgende Datei geladen: " +
+            "Es wurde folgende Datei geladen: " +
             file.name +
             ". ",
-          "Die Datei enthält ein Tabellenblatt: " +
-            sheetNames.join(", ") +
-            ". Dieses Blatt wird importiert.",
-          "Es wurde" +
-            (importedKids.length != 1 ? "n" : "") +
-            " " +
-            importedKids.length +
-            " Teilnehmer gefunden.",
-        ]);
-      } else {
-        setSuccessMessage([
-          "Es wurde folgende Datei geladen: " +
-            file.name +
-            ". ",
-          "Die Datei enthält folgende Tabellenblätter: " +
-            sheetNames.join(", ") +
-            ".",
-          "Nur das erste Tabellenblatt (" +
-            sheetNames[0] +
-            ") wird importiert.",
-          "Es wurde" +
+            "Es wurde" +
             (importedKids.length > 1 ? "n" : "") +
             " " +
             importedKids.length +
             " Teilnehmer gefunden.",
         ]);
-      }
 
       setImportableKids(importedKids);
 
@@ -130,12 +104,7 @@ export default function ImportModalWithButton(props) {
         <Modal.Body>
           <div className="space-y-6">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              Es kann eine einzelne Excel-Datei (.xlsx) ausgewählt werden, um
-              daraus Teilnehmer zu importieren. Dabei wird nur das erste
-              Tabellenblatt beachtet und in diesem müssen die Teilnehmer
-              zeilenweise aufgelistet werden. Die erste Zeile muss bereits der
-              erste Teilnehmer sein. Die Spalte A muss die Namen enthalten, die
-              Spalten B, C, D, usw. die Wünsche. Alle weiteren Spalten werden ignoriert.
+              JSON Datei muss Original-Request-Format entsprechen.
             </p>
 
             <Badge
@@ -151,8 +120,8 @@ export default function ImportModalWithButton(props) {
 
             {!errorMessage && !successMessage && (
               <FileDropzone
-                fileTypes="Excel-Datei (.xlsx)"
-                fileFilter=".xlsx"
+                fileTypes="JSON-Datei (.json)"
+                fileFilter=".json"
                 onChange={onChangeFile}
                 onDrop={onDropFile}
               ></FileDropzone>
