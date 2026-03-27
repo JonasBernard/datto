@@ -1,4 +1,4 @@
-# Datto
+# Gruppen-Tool
 
 Hosted at https://gruppen-tool.de
 
